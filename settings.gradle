@@ -1,3 +1,4 @@
 include 'grpcapi-interface'
 include 'GrpcApiService'
+include 'GrpsApiClient'
 
