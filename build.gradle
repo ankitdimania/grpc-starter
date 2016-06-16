@@ -1,50 +1,74 @@
-apply plugin: 'java'
-apply plugin: 'com.google.protobuf'
+description = 'Grpc API'
 
+subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'java'
+    apply plugin: 'signing'
+    apply plugin: 'jacoco'
 
-buildscript {
     repositories {
         mavenCentral()
+        mavenLocal()
     }
+
+    [compileJava, compileTestJava].each() {
+        it.options.compilerArgs += ["-Xlint:all", "-Xlint:-options"]
+        it.options.encoding = "UTF-8"
+    }
+
+    compileTestJava {
+        // serialVersionUID is basically guaranteed to be useless in our tests
+        options.compilerArgs += ["-Xlint:-serial"]
+    }
+
+    jar.manifest {
+        attributes('Implementation-Title': name,
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-JDK': System.getProperty('java.version'),
+                'Source-Compatibility': sourceCompatibility,
+                'Target-Compatibility': targetCompatibility)
+    }
+
+    javadoc.options {
+        encoding = 'UTF-8'
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+    }
+
     dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.7'
+        testCompile 'junit:junit:4.11'
+        testCompile 'org.mockito:mockito-core:1.10.19'
     }
-}
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'io.grpc:grpc-netty:0.14.0'
-    compile 'io.grpc:grpc-protobuf:0.14.0'
-    compile 'io.grpc:grpc-stub:0.14.0'
-    compile 'com.google.protobuf:protobuf-java-util:3.0.0-beta-2'
-}
-
-protobuf {
-    protoc {
-        // The version of protoc must match protobuf-java. If you don't depend on
-        // protobuf-java directly, you will be transitively depending on the
-        // protobuf-java version that grpc depends on.
-        artifact = "com.google.protobuf:protoc:3.0.0-beta-2"
-    }
-    plugins {
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:0.14.0'
+    checkstyle {
+        configFile = file("$rootDir/checkstyle.xml")
+        toolVersion = "6.17"
+        ignoreFailures = false
+        if (rootProject.hasProperty("checkstyle.ignoreFailures")) {
+            ignoreFailures = rootProject.properties["checkstyle.ignoreFailures"].toBoolean()
         }
+        configProperties["rootDir"] = rootDir
     }
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
+
+    checkstyleMain {
+        source = fileTree(dir: 'src/main', include: "**/*.java")
+    }
+
+    checkstyleTest {
+        source = fileTree(dir: 'src/test', include: "**/*.java")
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
     }
 }
-
-// Let intellij projects refer to generated code
-//idea {
-//    module {
-//        sourceDirs += file("${buildDir}/generated/source/proto/main/java");
-//        sourceDirs += file("${buildDir}/generated/source/proto/main/grpc");
-//    }
-//}
