@@ -82,7 +82,7 @@ public class HelloWorldClient {
     HelloWorldClient client = new HelloWorldClient("localhost", 50051);
     try {
       /* Access a service running on the local machine on port 50051 */
-      String user = "world";
+      String user = "Ankit Dimania";
       if (args.length > 0) {
         user = args[0]; /* Use the arg as the name to greet if provided */
       }

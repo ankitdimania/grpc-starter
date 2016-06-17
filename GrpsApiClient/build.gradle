@@ -5,7 +5,6 @@ description = 'GrpcAPI: Client'
 startScripts.enabled = false
 
 dependencies {
-    compile 'io.grpc:grpc-netty:0.14.0'
     compile project(':grpcapi-interface')
 }
 

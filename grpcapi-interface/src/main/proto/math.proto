@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.grootstock.math";
+option java_outer_classname = "MathProto";
+option objc_class_prefix = "GSM";
+
+package math;
+
+// The greeting service definition.
+service MathService {
+  // Adds the numbers
+  rpc Add (AddRequest) returns (AddResponse);
+
+  // Multiplies the numbers
+  rpc multiply (MultiplyRequest) returns (MultiplyResponse);
+
+  // Divides the numbers
+  rpc divide (DivideRequest) returns (DivideResponse);
+}
+
+// The request message for add.
+message AddRequest {
+  double a = 1;
+  double b = 2;
+}
+
+// The response message containing the sum
+message AddResponse {
+  double sum = 1;
+}
+
+
+// The request message for multiply.
+message MultiplyRequest {
+  double a = 1;
+  double b = 2;
+}
+
+// The response message containing the product
+message MultiplyResponse {
+  double product = 1;
+}
+
+
+// The request message for divide.
+message DivideRequest {
+  int64 dividend = 1;
+  int64 divisor = 2;
+}
+
+// The response message containing the division
+message DivideResponse {
+  int64 quotient = 1;
+  int64 remainder = 2;
+}
