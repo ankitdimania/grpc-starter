@@ -2,6 +2,8 @@ package com.grootstock.helloworld.service.validator;
 
 import io.grpc.StatusException;
 
-public interface Validator<ReqT> {
-  void validate(ReqT request) throws StatusException;
+public interface Validator<ReqT, ResT> {
+  void requestValidate(ReqT request) throws StatusException;
+
+  void responseValidate(ReqT request, ResT response) throws StatusException;
 }

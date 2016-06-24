@@ -1,4 +1,17 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.6'
+    }
+}
+
+apply plugin: 'net.ltgt.apt'
 apply plugin: 'application'
+apply plugin: 'idea'
 
 description = 'GrpcAPI: Service'
 
@@ -6,6 +19,10 @@ startScripts.enabled = false
 
 dependencies {
     compile project(':grpcapi-interface')
+
+    // DI
+    compile 'com.google.dagger:dagger:2.5' // dependency of dagger-compiler
+    apt 'com.google.dagger:dagger-compiler:2.5'
 
 //    compile 'com.google.protobuf:protobuf-java-util:3.0.0-beta-2'
 }

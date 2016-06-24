@@ -1,13 +1,10 @@
 package com.grootstock.helloworld.service.activity;
 
-import com.grootstock.helloworld.service.validator.DivideDivisorValidator;
 import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
 import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,22 +12,12 @@ import java.util.List;
  */
 public class DivideActivity extends BaseActivity<DivideRequest, DivideResponse> {
 
-  private static final List<Validator<DivideRequest>> validators = initializeValidators();
-
-  private static List<Validator<DivideRequest>> initializeValidators() {
-    List<Validator<DivideRequest>> validators = new ArrayList<>();
-    validators.add(new DivideDivisorValidator());
-
-    return validators;
-  }
-
-  public DivideActivity() {
+  public DivideActivity(List<Validator<DivideRequest, DivideResponse>> validators) {
     super(validators);
   }
 
   @Override
-  protected void performInternal(DivideRequest request,
-                                 StreamObserver<DivideResponse> responseObserver)
+  protected DivideResponse performInternal(DivideRequest request)
           throws StatusException {
     long dividend = request.getDividend();
     long divisor = request.getDivisor();
@@ -40,6 +27,6 @@ public class DivideActivity extends BaseActivity<DivideRequest, DivideResponse> 
 
     DivideResponse addResponse = DivideResponse.newBuilder()
             .setQuotient(quotient).setRemainder(remainder).build();
-    responseObserver.onNext(addResponse);
+    return addResponse;
   }
 }
