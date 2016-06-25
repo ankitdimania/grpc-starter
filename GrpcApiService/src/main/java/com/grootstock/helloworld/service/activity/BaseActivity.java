@@ -34,6 +34,7 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
       ResT response = performInternal(request);
       performPostValidation(request, response);
       responseObserver.onNext(response);
+      responseObserver.onCompleted();
     } catch (StatusException ex) {
       responseObserver.onError(ex);
     } catch (StatusRuntimeException ex) {
@@ -42,8 +43,6 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
       Status status = Status.INTERNAL
               .withDescription("Server Issue: [" + ex.getClass() + "] " + ex.getMessage());
       responseObserver.onError(status.asException());
-    } finally {
-      responseObserver.onCompleted();
     }
   }
 

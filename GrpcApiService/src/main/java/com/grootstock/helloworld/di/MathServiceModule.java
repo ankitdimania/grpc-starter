@@ -2,6 +2,7 @@ package com.grootstock.helloworld.di;
 
 import com.grootstock.helloworld.service.MathService;
 import com.grootstock.helloworld.service.activity.DivideActivity;
+import com.grootstock.helloworld.service.handler.DivideWorker;
 import com.grootstock.helloworld.service.validator.DivideDivisorValidator;
 import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.DivideRequest;
@@ -11,6 +12,7 @@ import dagger.Provides;
 import io.grpc.BindableService;
 
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +26,15 @@ public class MathServiceModule {
 
   @Provides
   @Named("DivideActivity")
-  static DivideActivity provideDivideActivity() {
-    List<Validator<DivideRequest, DivideResponse>> validators = getDivideActivityValidators();
-    return new DivideActivity(validators);
+  static DivideActivity provideDivideActivity(
+          @Named("DivideActivityValidators")
+                  List<Validator<DivideRequest, DivideResponse>> validators,
+          Provider<DivideWorker> divideWorker) {
+    return new DivideActivity(validators, divideWorker);
   }
 
+  @Provides
+  @Named("DivideActivityValidators")
   static List<Validator<DivideRequest, DivideResponse>> getDivideActivityValidators() {
     List<Validator<DivideRequest, DivideResponse>> validators = new ArrayList<>();
     // pre-validators
@@ -38,5 +44,10 @@ public class MathServiceModule {
     // none
 
     return validators;
+  }
+
+  @Provides
+  static DivideWorker provideDivideWorker() {
+    return new DivideWorker();
   }
 }
