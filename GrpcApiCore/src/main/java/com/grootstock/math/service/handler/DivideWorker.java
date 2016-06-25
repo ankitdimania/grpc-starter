@@ -1,6 +1,6 @@
-package com.grootstock.helloworld.service.handler;
+package com.grootstock.math.service.handler;
 
-import com.grootstock.helloworld.service.response.DivideResponseBuilder;
+import com.grootstock.math.service.response.DivideResponseBuilder;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
 

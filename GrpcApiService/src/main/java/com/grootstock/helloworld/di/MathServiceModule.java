@@ -2,11 +2,11 @@ package com.grootstock.helloworld.di;
 
 import com.grootstock.helloworld.service.MathService;
 import com.grootstock.helloworld.service.activity.DivideActivity;
-import com.grootstock.helloworld.service.handler.DivideWorker;
 import com.grootstock.helloworld.service.validator.DivideDivisorValidator;
 import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
+import com.grootstock.math.service.handler.DivideWorker;
 import dagger.Module;
 import dagger.Provides;
 import io.grpc.BindableService;
@@ -46,8 +46,4 @@ public class MathServiceModule {
     return validators;
   }
 
-  @Provides
-  static DivideWorker provideDivideWorker() {
-    return new DivideWorker();
-  }
 }

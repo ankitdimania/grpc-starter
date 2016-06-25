@@ -1,4 +1,4 @@
-package com.grootstock.helloworld.service.response;
+package com.grootstock.math.service.response;
 
 import com.grootstock.math.DivideResponse;
 
