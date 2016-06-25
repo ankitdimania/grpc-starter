@@ -11,6 +11,15 @@ subprojects {
         mavenLocal()
     }
 
+
+    buildscript {
+        repositories {
+            maven {
+                url 'https://plugins.gradle.org/m2/'
+            }
+        }
+    }
+
     [compileJava, compileTestJava].each() {
         it.options.compilerArgs += ["-Xlint:all", "-Xlint:-options"]
         it.options.encoding = "UTF-8"
