@@ -14,6 +14,7 @@ startScripts.enabled = false
 
 dependencies {
     compile project(':grpcapi-interface')
+    compile project(':GrpcApiCommons')
     compile project(':GrpcApiCore')
 
     // DI
