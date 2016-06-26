@@ -6,6 +6,8 @@ import com.grootstock.math.DivideResponse;
 import com.grootstock.math.service.handler.DivideWorker;
 import io.grpc.StatusException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 
@@ -15,8 +17,11 @@ import java.util.List;
 public class DivideActivity extends BaseActivity<DivideRequest, DivideResponse> {
   private Provider<DivideWorker> workerProvider;
 
-  public DivideActivity(List<Validator<DivideRequest, DivideResponse>> validators,
-                        Provider<DivideWorker> workerProvider) {
+  @Inject
+  public DivideActivity(
+          @Named("DivideActivityValidators")
+                  List<Validator<DivideRequest, DivideResponse>> validators,
+          Provider<DivideWorker> workerProvider) {
     super(validators);
     this.workerProvider = workerProvider;
   }

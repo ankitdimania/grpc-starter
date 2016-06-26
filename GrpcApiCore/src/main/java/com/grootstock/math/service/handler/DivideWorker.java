@@ -6,6 +6,7 @@ import com.grootstock.math.DivideResponse;
 
 public class DivideWorker extends BaseWorker {
   // Instance variables are thread safe
+  String requestId;
   long dividend;
   long divisor;
 

@@ -1,18 +1,23 @@
 package com.grootstock.helloworld.di;
 
 import com.grootstock.helloworld.service.MathService;
+import com.grootstock.helloworld.service.activity.Activity;
+import com.grootstock.helloworld.service.activity.AddActivity;
 import com.grootstock.helloworld.service.activity.DivideActivity;
+import com.grootstock.helloworld.service.activity.MultiplyActivity;
 import com.grootstock.helloworld.service.validator.DivideDivisorValidator;
 import com.grootstock.helloworld.service.validator.Validator;
+import com.grootstock.math.AddRequest;
+import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
-import com.grootstock.math.service.handler.DivideWorker;
+import com.grootstock.math.MultiplyRequest;
+import com.grootstock.math.MultiplyResponse;
 import dagger.Module;
 import dagger.Provides;
 import io.grpc.BindableService;
 
 import javax.inject.Named;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +30,47 @@ public class MathServiceModule {
   }
 
   @Provides
+  @Named("AddActivity")
+  static Activity<AddRequest, AddResponse> provideAddActivity(AddActivity addActivity) {
+    return addActivity;
+  }
+
+  @Provides
+  @Named("MultiplyActivity")
+  static Activity<MultiplyRequest, MultiplyResponse> provideMultiplyActivity(
+          MultiplyActivity multiplyActivity) {
+    return multiplyActivity;
+  }
+
+  @Provides
   @Named("DivideActivity")
-  static DivideActivity provideDivideActivity(
-          @Named("DivideActivityValidators")
-                  List<Validator<DivideRequest, DivideResponse>> validators,
-          Provider<DivideWorker> divideWorker) {
-    return new DivideActivity(validators, divideWorker);
+  static Activity<DivideRequest, DivideResponse> provideDivideActivity(
+          DivideActivity divideActivity) {
+    return divideActivity;
+  }
+
+  @Provides
+  @Named("AddActivityValidators")
+  static List<Validator<AddRequest, AddResponse>> getAddActivityValidators() {
+    List<Validator<AddRequest, AddResponse>> validators = new ArrayList<>();
+    // pre-validators
+
+    // post-validators
+    // none
+
+    return validators;
+  }
+
+  @Provides
+  @Named("MultiplyActivityValidators")
+  static List<Validator<MultiplyRequest, MultiplyResponse>> getMultiplyActivityValidators() {
+    List<Validator<MultiplyRequest, MultiplyResponse>> validators = new ArrayList<>();
+    // pre-validators
+
+    // post-validators
+    // none
+
+    return validators;
   }
 
   @Provides

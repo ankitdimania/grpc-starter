@@ -1,6 +1,6 @@
 package com.grootstock.helloworld.service;
 
-import com.grootstock.helloworld.service.activity.DivideActivity;
+import com.grootstock.helloworld.service.activity.Activity;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -14,36 +14,36 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class MathService extends MathServiceGrpc.AbstractMathService {
-  private DivideActivity divideActivity;
+  private Activity<AddRequest, AddResponse> addActivity;
+  private Activity<MultiplyRequest, MultiplyResponse> multiplyActivity;
+  private Activity<DivideRequest, DivideResponse> divideActivity;
 
+  /**
+   * Create new MathService.
+   * @param addActivity Add Activity
+   * @param multiplyActivity Multiply Activity
+   * @param divideActivity Divide Activity
+   */
   @Inject
   public MathService(
-          @Named("DivideActivity") DivideActivity divideActivity) {
+          @Named("AddActivity") Activity<AddRequest, AddResponse> addActivity,
+          @Named("MultiplyActivity") Activity<MultiplyRequest, MultiplyResponse> multiplyActivity,
+          @Named("DivideActivity") Activity<DivideRequest, DivideResponse> divideActivity) {
+    this.addActivity = addActivity;
+    this.multiplyActivity = multiplyActivity;
     this.divideActivity = divideActivity;
   }
 
   @Override
   public void add(AddRequest request,
                   StreamObserver<AddResponse> responseObserver) {
-    double a = request.getA();
-    double b = request.getB();
-    double sum = a + b;
-
-    AddResponse addResponse = AddResponse.newBuilder().setSum(sum).build();
-    responseObserver.onNext(addResponse);
-    responseObserver.onCompleted();
+    addActivity.perform(request, responseObserver);
   }
 
   @Override
   public void multiply(MultiplyRequest request,
                        StreamObserver<MultiplyResponse> responseObserver) {
-    double a = request.getA();
-    double b = request.getB();
-    double product = a * b;
-
-    MultiplyResponse addResponse = MultiplyResponse.newBuilder().setProduct(product).build();
-    responseObserver.onNext(addResponse);
-    responseObserver.onCompleted();
+    multiplyActivity.perform(request, responseObserver);
   }
 
   @Override
