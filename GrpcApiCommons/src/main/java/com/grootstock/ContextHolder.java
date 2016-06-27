@@ -1,11 +1,15 @@
 package com.grootstock;
 
+import lombok.Data;
+
 import java.util.UUID;
 
+@Data
 public class ContextHolder {
   private static ThreadLocal<ContextHolder> storage = new ThreadLocal<>();
-  private String requestId;
-  private long threadId;
+
+  private String requestId = UUID.randomUUID().toString();
+  private long threadId = Thread.currentThread().getId();
 
   public static ContextHolder get() {
     return storage.get();
@@ -13,6 +17,7 @@ public class ContextHolder {
 
   /**
    * Initialize a new ContextHolder.
+   *
    * @return new ContextHolder
    */
   public static ContextHolder init() {
@@ -30,15 +35,5 @@ public class ContextHolder {
   }
 
   private ContextHolder() {
-    requestId = UUID.randomUUID().toString();
-    threadId = Thread.currentThread().getId();
-  }
-
-  public String getRequestId() {
-    return requestId;
-  }
-
-  public long getThreadId() {
-    return threadId;
   }
 }

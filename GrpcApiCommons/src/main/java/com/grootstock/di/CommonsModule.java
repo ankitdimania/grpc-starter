@@ -9,7 +9,6 @@ import javax.inject.Named;
 @Module
 public class CommonsModule {
 
-
   @Provides
   @Named("RequestId")
   static String provideDivideWorker() {
