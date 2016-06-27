@@ -3,9 +3,15 @@ package com.grootstock.math.service.handler;
 import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class MultiplyWorker extends BaseWorker {
-  // Instance variables are thread safe
-  String requestId;
+
+  @Inject
+  public MultiplyWorker(@Named("RequestId") String requestId) {
+    super(requestId);
+  }
 
   /**
    * Perform the multiply operation.

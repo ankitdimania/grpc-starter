@@ -1,5 +1,6 @@
 package com.grootstock.helloworld.service.activity;
 
+import com.grootstock.ContextHolder;
 import com.grootstock.helloworld.service.validator.Validator;
 import io.grpc.Status;
 import io.grpc.StatusException;
@@ -30,6 +31,9 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
    */
   public void perform(ReqT request, StreamObserver<ResT> responseObserver) {
     try {
+      ContextHolder contextHolder = ContextHolder.init();
+      //TODO: Metric Setup
+
       performValidations(request);
       ResT response = performInternal(request);
       performPostValidation(request, response);
@@ -43,6 +47,8 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
       Status status = Status.INTERNAL
               .withDescription("Server Issue: [" + ex.getClass() + "] " + ex.getMessage());
       responseObserver.onError(status.asException());
+    } finally {
+      ContextHolder.remove();
     }
   }
 

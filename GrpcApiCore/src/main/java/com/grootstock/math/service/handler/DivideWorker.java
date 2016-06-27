@@ -4,11 +4,19 @@ import com.grootstock.math.service.response.DivideResponseBuilder;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class DivideWorker extends BaseWorker {
   // Instance variables are thread safe
-  String requestId;
   long dividend;
   long divisor;
+
+
+  @Inject
+  public DivideWorker(@Named("RequestId") String requestId) {
+    super(requestId);
+  }
 
   /**
    * Perform the divide operation.

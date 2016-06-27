@@ -3,9 +3,15 @@ package com.grootstock.math.service.handler;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class AddWorker extends BaseWorker {
-  // Instance variables are thread safe
-  String requestId;
+
+  @Inject
+  public AddWorker(@Named("RequestId") String requestId) {
+    super(requestId);
+  }
 
   /**
    * Perform the add operation.
