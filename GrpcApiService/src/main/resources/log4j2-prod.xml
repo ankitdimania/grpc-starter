@@ -17,15 +17,15 @@
         </RollingRandomAccessFile>
 
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
+            <PatternLayout pattern="%d{ISO8601} %-5p [%t] %reqId (%F:%L) - %m%n"/>
         </Console>
     </Appenders>
 
     <Loggers>
-        <AsyncLogger name="com.grootstock.helloworld.MathServer" level="DEBUG"/>
-        <AsyncLogger name="com.grootstock.math.service" level="INFO"/>
-        <AsyncRoot level="error" includeLocation="true">
+        <Logger name="com.grootstock.helloworld.MathServer" level="DEBUG"/>
+        <Logger name="com.grootstock.math.service" level="INFO"/>
+        <Root level="error" includeLocation="true">
             <AppenderRef ref="file-log"/>
-        </AsyncRoot>
+        </Root>
     </Loggers>
 </Configuration>
