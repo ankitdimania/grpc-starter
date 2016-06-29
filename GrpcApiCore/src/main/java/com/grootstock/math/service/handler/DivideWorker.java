@@ -27,7 +27,7 @@ public class DivideWorker extends BaseWorker {
    * @return Division response
    */
   public DivideResponse divide(DivideRequest request) {
-    log.info("Processing divide request");
+    log.debug("Processing divide request");
     // instance variables are thread safe. here you may wanna set
     // state variables like ids, progress, etc.
     dividend = request.getDividend();
@@ -42,7 +42,7 @@ public class DivideWorker extends BaseWorker {
    * @return DivideResponse
    */
   private DivideResponse performOperation() {
-    log.info("Processing divide operation with dividend:" + dividend + ", divisor:" + divisor);
+    log.info("Processing divide operation with dividend:{}, divisor:{}", dividend, divisor);
     long quotient = dividend / divisor;
     long remainder = dividend % divisor;
 

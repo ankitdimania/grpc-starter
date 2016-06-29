@@ -22,14 +22,14 @@ public class MultiplyWorker extends BaseWorker {
    * @return Division response
    */
   public MultiplyResponse multiply(MultiplyRequest request) {
-    log.info("Processing multiply request");
+    log.debug("Processing multiply request");
     // instance variables are thread safe. here you may wanna set
     // state variables like ids, progress, etc.
 
     double a = request.getA();
     double b = request.getB();
 
-    log.info("Processing multiply operation with a:" + a + ", b:" + b);
+    log.info("Processing multiply operation with a:{}, b:{}", a, b);
     double product = a * b;
 
     MultiplyResponse multiplyResponse = MultiplyResponse.newBuilder().setProduct(product).build();
