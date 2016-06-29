@@ -7,16 +7,16 @@
     <Appenders>
         <RollingRandomAccessFile name="file-log"
                                  fileName="${log-path}/service.log"
-                                 filePattern="${log-path}/service-%d{yyyy-MM-dd}-%i.log.gz"
+                                 filePattern="${log-path}/$${yyyy/MM}/service-%d{yyyy-MM-dd-HH}-%i.log.gz"
                                  immediateFlush="false"
                                  append="true"
                                  ignoreExceptions="false">
             <PatternLayout pattern="%d{ISO8601} %-5p [%t] %reqId %C{2}:%L - %m%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="10"/>
+            <DefaultRolloverStrategy max="20"/>
         </RollingRandomAccessFile>
 
         <Console name="console" target="SYSTEM_OUT">
