@@ -1,4 +1,4 @@
-package com.grootstock.helloworld.service.validator;
+package com.grootstock.math.service.validator;
 
 import io.grpc.StatusException;
 

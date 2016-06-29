@@ -1,18 +1,18 @@
-package com.grootstock.helloworld.di;
+package com.grootstock.math.di;
 
-import com.grootstock.helloworld.service.MathService;
-import com.grootstock.helloworld.service.activity.Activity;
-import com.grootstock.helloworld.service.activity.AddActivity;
-import com.grootstock.helloworld.service.activity.DivideActivity;
-import com.grootstock.helloworld.service.activity.MultiplyActivity;
-import com.grootstock.helloworld.service.validator.DivideDivisorValidator;
-import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
 import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
+import com.grootstock.math.service.MathService;
+import com.grootstock.math.service.activity.Activity;
+import com.grootstock.math.service.activity.AddActivity;
+import com.grootstock.math.service.activity.DivideActivity;
+import com.grootstock.math.service.activity.MultiplyActivity;
+import com.grootstock.math.service.validator.DivideDivisorValidator;
+import com.grootstock.math.service.validator.Validator;
 import dagger.Module;
 import dagger.Provides;
 import io.grpc.BindableService;

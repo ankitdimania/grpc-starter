@@ -1,6 +1,6 @@
 package com.grootstock.math;
 
-import com.grootstock.helloworld.di.DaggerMathServiceComponent;
+import com.grootstock.math.di.DaggerMathServiceComponent;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.extern.slf4j.Slf4j;

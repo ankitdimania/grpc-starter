@@ -24,7 +24,6 @@
     <Loggers>
         <AsyncLogger name="com.grootstock.helloworld.MathServer" level="DEBUG"/>
         <AsyncLogger name="com.grootstock.math.service" level="INFO"/>
-        <AsyncLogger name="com.grootstock.math.service" level="INFO"/>
         <AsyncRoot level="error" includeLocation="true">
             <AppenderRef ref="file-log"/>
         </AsyncRoot>

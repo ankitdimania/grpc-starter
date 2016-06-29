@@ -1,4 +1,4 @@
-package com.grootstock.helloworld.service.activity;
+package com.grootstock.math.service.activity;
 
 import io.grpc.stub.StreamObserver;
 

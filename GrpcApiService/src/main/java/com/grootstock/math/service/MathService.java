@@ -1,6 +1,5 @@
-package com.grootstock.helloworld.service;
+package com.grootstock.math.service;
 
-import com.grootstock.helloworld.service.activity.Activity;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -8,6 +7,7 @@ import com.grootstock.math.DivideResponse;
 import com.grootstock.math.MathServiceGrpc;
 import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
+import com.grootstock.math.service.activity.Activity;
 import io.grpc.stub.StreamObserver;
 
 import javax.inject.Inject;

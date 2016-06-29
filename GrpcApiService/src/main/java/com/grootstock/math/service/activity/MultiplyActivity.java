@@ -1,9 +1,9 @@
-package com.grootstock.helloworld.service.activity;
+package com.grootstock.math.service.activity;
 
-import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
 import com.grootstock.math.service.handler.MultiplyWorker;
+import com.grootstock.math.service.validator.Validator;
 import io.grpc.StatusException;
 
 import javax.inject.Inject;

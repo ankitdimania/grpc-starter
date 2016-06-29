@@ -1,9 +1,9 @@
-package com.grootstock.helloworld.service.activity;
+package com.grootstock.math.service.activity;
 
-import com.grootstock.helloworld.service.validator.Validator;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.service.handler.AddWorker;
+import com.grootstock.math.service.validator.Validator;
 import io.grpc.StatusException;
 import lombok.extern.slf4j.Slf4j;
 

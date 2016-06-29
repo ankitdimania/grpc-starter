@@ -1,7 +1,7 @@
-package com.grootstock.helloworld.service.activity;
+package com.grootstock.math.service.activity;
 
 import com.grootstock.ContextHolder;
-import com.grootstock.helloworld.service.validator.Validator;
+import com.grootstock.math.service.validator.Validator;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;

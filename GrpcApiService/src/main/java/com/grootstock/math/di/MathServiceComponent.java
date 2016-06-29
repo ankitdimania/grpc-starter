@@ -1,4 +1,4 @@
-package com.grootstock.helloworld.di;
+package com.grootstock.math.di;
 
 import com.grootstock.di.CommonsModule;
 import com.grootstock.math.service.di.MathCoreModule;

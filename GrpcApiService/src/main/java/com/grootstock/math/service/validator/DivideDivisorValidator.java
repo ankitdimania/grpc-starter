@@ -1,4 +1,4 @@
-package com.grootstock.helloworld.service.validator;
+package com.grootstock.math.service.validator;
 
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
