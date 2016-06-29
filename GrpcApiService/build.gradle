@@ -23,9 +23,20 @@ dependencies {
     compile 'com.google.dagger:dagger:2.5' // dependency of dagger-compiler
     apt 'com.google.dagger:dagger-compiler:2.5'
 
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.16.+'
+    apt 'org.projectlombok:lombok:1.16.+'
+
 //    compile 'com.google.protobuf:protobuf-java-util:3.0.0-beta-2'
 }
 
+task mathServer(type: CreateStartScripts) {
+    mainClassName = "com.grootstock.helloworld.MathServer"
+    applicationName = "math-server"
+    outputDir = new File(project.buildDir, 'tmp')
+    classpath = jar.outputs.files + project.configurations.runtime
+    defaultJvmOpts = ["-Dlog4j.configurationFile=log4j2-prod.xml"]
+}
 
 task helloWorldServer(type: CreateStartScripts) {
     mainClassName = "com.grootstock.helloworld.HelloWorldServer"
@@ -36,5 +47,6 @@ task helloWorldServer(type: CreateStartScripts) {
 
 applicationDistribution.into('bin') {
     from(helloWorldServer)
+    from(mathServer)
     fileMode = 0755
 }

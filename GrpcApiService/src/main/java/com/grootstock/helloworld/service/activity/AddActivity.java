@@ -5,6 +5,7 @@ import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.service.handler.AddWorker;
 import io.grpc.StatusException;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * This class does the sum operation.
  */
+@Slf4j
 public class AddActivity extends BaseActivity<AddRequest, AddResponse> {
   private Provider<AddWorker> workerProvider;
 

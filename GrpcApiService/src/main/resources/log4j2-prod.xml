@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="log-path">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingRandomAccessFile name="file-log"
+                                 fileName="${log-path}/service.log"
+                                 filePattern="${log-path}/service-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d{ISO8601} %-5p [%t] %reqId %C{2}:%L - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <AsyncLogger name="com.grootstock.helloworld.MathServer" level="DEBUG"/>
+        <AsyncLogger name="com.grootstock.math.service" level="INFO"/>
+        <AsyncLogger name="com.grootstock.math.service" level="INFO"/>
+        <AsyncRoot level="error" includeLocation="true">
+            <AppenderRef ref="file-log"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>
