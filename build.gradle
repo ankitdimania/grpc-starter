@@ -6,17 +6,24 @@ subprojects {
     apply plugin: 'signing'
     apply plugin: 'jacoco'
 
+    group = 'com.grootstock'
+    version = '0.0.1-SNAPSHOT' // CURRENT_GRPC_API_VERSION
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     repositories {
         mavenCentral()
         mavenLocal()
     }
 
-
     buildscript {
-        repositories {
-            maven {
-                url 'https://plugins.gradle.org/m2/'
-            }
+        repositories.maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+
+        dependencies {
+            classpath 'net.ltgt.gradle:gradle-apt-plugin:0.6'
         }
     }
 
@@ -44,16 +51,53 @@ subprojects {
         links 'https://docs.oracle.com/javase/8/docs/api/'
     }
 
+    ext {
+        def grpcVersion = '0.14.1' // '0.14.1'
+
+        libraries = [
+                // Annotation processing
+                apt_plugin     : 'net.ltgt.gradle:gradle-apt-plugin:0.6',
+
+                // gRPC
+                grpc_netty     : "io.grpc:grpc-netty:$grpcVersion",
+                grpc_protobuf  : "io.grpc:grpc-protobuf:$grpcVersion",
+                grpc_stub      : "io.grpc:grpc-stub:$grpcVersion",
+
+                grpc_protoc_gen: "io.grpc:protoc-gen-grpc-java:$grpcVersion",
+
+                // The version of protoc must match protobuf-java.
+                // protobuf-java could be a transitive dependency through grpc.
+                protobuf_protoc: "com.google.protobuf:protoc:3.0.0-beta-2",
+
+                // DI: dagger
+                dagger         : 'com.google.dagger:dagger:2.5',
+                dagger_compiler: 'com.google.dagger:dagger-compiler:2.5',
+
+                // lombok
+                lombok         : 'org.projectlombok:lombok:1.16.+',
+
+                // SLF4J logging
+                slf4j          : 'org.slf4j:slf4j-api:1.7.+',
+                log4j_slf4j    : 'org.apache.logging.log4j:log4j-slf4j-impl:2.+',
+                log4j_core     : 'org.apache.logging.log4j:log4j-core:2.+',
+                disruptor      : 'com.lmax:disruptor:3.3.+',
+
+                // Test dependencies.
+                junit          : 'junit:junit:4.12',
+                mockito        : 'org.mockito:mockito-core:1.10.19',
+                truth          : 'com.google.truth:truth:0.28',
+        ]
+    }
+
     dependencies {
         // SLF4J logging
-        compile 'org.slf4j:slf4j-api:1.7.+'
-//        compile 'ch.qos.logback:logback-classic:1.1+'
-        compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.+'
-        compile 'org.apache.logging.log4j:log4j-core:2.+'
-        compile 'com.lmax:disruptor:3.3.+'
+        compile libraries.slf4j,
+                libraries.log4j_slf4j,
+                libraries.log4j_core,
+                libraries.disruptor
 
-        testCompile 'junit:junit:4.12'
-        testCompile 'org.mockito:mockito-core:1.10.19'
+        testCompile libraries.junit,
+                libraries.mockito
     }
 
     checkstyle {

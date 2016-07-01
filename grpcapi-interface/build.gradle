@@ -1,36 +1,23 @@
-version '0.0.1-SNAPSHOT'
-
 apply plugin: 'idea'
 apply plugin: 'com.google.protobuf'
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
     dependencies {
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.7'
     }
 }
 
-def grpcVersion = '0.+' // '0.14.1'
-
 dependencies {
-    compile "io.grpc:grpc-netty:$grpcVersion"
-    compile "io.grpc:grpc-protobuf:$grpcVersion"
-    compile "io.grpc:grpc-stub:$grpcVersion"
+    compile libraries.grpc_netty, libraries.grpc_protobuf, libraries.grpc_stub
 }
 
 def generatedSourcePath = "$projectDir/src/generated"
 protobuf {
     protoc {
-        // The version of protoc must match protobuf-java. protobuf-java could be
-        // a transitive dependency through grpc.
-        artifact = "com.google.protobuf:protoc:3.0.0-beta-2"
+        artifact = libraries.protobuf_protoc
     }
     plugins {
-        grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
-        }
+        grpc.artifact = libraries.grpc_protoc_gen
     }
     generateProtoTasks {
         all()*.plugins {
@@ -42,13 +29,13 @@ protobuf {
 
 sourceSets.each { sourceSet ->
     task "deleteGeneratedSource${sourceSet.name}" << {
-        project.delete project.fileTree(dir: protobuf.generatedFilesBaseDir + '/' + sourceSet.name)
+        project.delete project.fileTree(dir: generatedSourcePath + '/' + sourceSet.name)
     }
 }
 
 idea {
     module {
-        sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
-        sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
+        sourceDirs += file("${generatedSourcePath}/main/java");
+        sourceDirs += file("${generatedSourcePath}/main/grpc");
     }
 }
