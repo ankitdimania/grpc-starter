@@ -4,7 +4,7 @@ import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ClientCall;
 import io.grpc.ClientInterceptor;
-import io.grpc.ForwardingClientCall;
+import io.grpc.ForwardingClientCall.SimpleForwardingClientCall;
 import io.grpc.Metadata;
 import io.grpc.Metadata.AsciiMarshaller;
 import io.grpc.MethodDescriptor;
@@ -27,6 +27,12 @@ public class MathClientAuthInterceptorBuilder {
   };
   private static final Metadata.Key<String> AUTH_META_KEY = of(AUTH_KEY, AUTH_KEY_MARSHLER);
 
+  /**
+   * Create a new {@link ClientInterceptor} for authentication.
+   *
+   * @param apiKey ApiKey for authentication
+   * @return {@link ClientInterceptor} implementation
+   */
   public static ClientInterceptor buildAuthInterceptor(String apiKey) {
     return new ClientInterceptor() {
       @Override
@@ -34,7 +40,7 @@ public class MathClientAuthInterceptorBuilder {
               MethodDescriptor<ReqT, RespT> method,
               CallOptions callOptions,
               Channel next) {
-        return new ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT>(next.newCall(method, callOptions)) {
+        return new SimpleForwardingClientCall<ReqT, RespT>(next.newCall(method, callOptions)) {
           @Override
           public void start(Listener<RespT> responseListener, Metadata headers) {
             if (headers.containsKey(AUTH_META_KEY)) {

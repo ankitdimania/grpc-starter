@@ -48,11 +48,16 @@ public class HelloWorldClient {
   private final ManagedChannel channel;
   private final GreeterGrpc.GreeterBlockingStub blockingStub;
 
-  /** Construct client connecting to HelloWorld server at {@code host:port}. */
+  /**
+   * Construct client connecting to HelloWorld server at {@code host:port}.
+   *
+   * @param host hostname
+   * @param port port
+   */
   public HelloWorldClient(String host, int port) {
     channel = ManagedChannelBuilder.forAddress(host, port)
-        .usePlaintext(true)
-        .build();
+            .usePlaintext(true)
+            .build();
     blockingStub = GreeterGrpc.newBlockingStub(channel);
   }
 
@@ -60,7 +65,11 @@ public class HelloWorldClient {
     channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
   }
 
-  /** Say hello to server. */
+  /**
+   * Say hello to server.
+   *
+   * @param name your name
+   */
   public void greet(String name) {
     logger.info("Will try to greet " + name + " ...");
     HelloRequest request = HelloRequest.newBuilder().setName(name).build();
@@ -77,6 +86,9 @@ public class HelloWorldClient {
   /**
    * Greet server. If provided, the first element of {@code args} is the name to use in the
    * greeting.
+   *
+   * @param args Command line params
+   * @throws Exception easy use
    */
   public static void main(String[] args) throws Exception {
     HelloWorldClient client = new HelloWorldClient("localhost", 50051);

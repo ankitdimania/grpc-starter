@@ -32,6 +32,7 @@ public class AuthInterceptor implements ServerInterceptor {
   private static final Metadata.Key<String> AUTH_META_KEY = of(AUTH_KEY, AUTH_KEY_MARSHLER);
   private static final ServerCall.Listener<?> EMPTY_LISTENER = new EmptyServerCallListener<>();
 
+  @SuppressWarnings("unchecked")
   @Override
   public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
           MethodDescriptor<ReqT, RespT> method,

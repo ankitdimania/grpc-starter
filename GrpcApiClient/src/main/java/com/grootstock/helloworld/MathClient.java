@@ -57,16 +57,21 @@ public class MathClient {
 
   private final ManagedChannel channel;
   private final MathServiceGrpc.MathServiceBlockingClient blockingStub;
-  private final String API_KEY = "abcde"; // load from secure channel/config file
+  private static final String API_KEY = "abcde"; // load from secure channel/config file
 
   /**
    * Construct client connecting to Math server at {@code host:port}.
+   *
+   * @param host hostname
+   * @param port port
    */
   public MathClient(String host, int port) {
     channel = ManagedChannelBuilder.forAddress(host, port)
             .usePlaintext(true)
             .build();
-    Channel authChannel = ClientInterceptors.intercept(channel, MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
+    Channel authChannel = ClientInterceptors.intercept(
+            channel,
+            MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
     blockingStub = MathServiceGrpc.newBlockingStub(authChannel);
   }
 
@@ -136,6 +141,9 @@ public class MathClient {
 
   /**
    * Math service.
+   *
+   * @param args Command line params
+   * @throws Exception easy use
    */
   public static void main(String[] args) throws Exception {
     MathClient client = new MathClient("localhost", 50051);

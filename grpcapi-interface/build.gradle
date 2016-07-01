@@ -12,10 +12,12 @@ buildscript {
     }
 }
 
+def grpcVersion = '0.+' // '0.14.1'
+
 dependencies {
-    compile 'io.grpc:grpc-netty:0.14.0'
-    compile 'io.grpc:grpc-protobuf:0.14.0'
-    compile 'io.grpc:grpc-stub:0.14.0'
+    compile "io.grpc:grpc-netty:$grpcVersion"
+    compile "io.grpc:grpc-protobuf:$grpcVersion"
+    compile "io.grpc:grpc-stub:$grpcVersion"
 }
 
 def generatedSourcePath = "$projectDir/src/generated"
@@ -27,7 +29,7 @@ protobuf {
     }
     plugins {
         grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:0.14.0'
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
     generateProtoTasks {
