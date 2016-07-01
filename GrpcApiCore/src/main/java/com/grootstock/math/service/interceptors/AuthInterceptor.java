@@ -30,6 +30,7 @@ public class AuthInterceptor implements ServerInterceptor {
     }
   };
   private static final Metadata.Key<String> AUTH_META_KEY = of(AUTH_KEY, AUTH_KEY_MARSHLER);
+  private static final ServerCall.Listener<?> EMPTY_LISTENER = new EmptyServerCallListener<>();
 
   @Override
   public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
@@ -51,8 +52,7 @@ public class AuthInterceptor implements ServerInterceptor {
 
     log.error("Authentication failed!!!");
     call.close(Status.UNAUTHENTICATED, new Metadata());
-    return new ServerCall.Listener<ReqT>() {
-    };
+    return (ServerCall.Listener<ReqT>) EMPTY_LISTENER;
   }
 
   private Optional<String> getApiKey(Metadata metadata) {
@@ -61,5 +61,9 @@ public class AuthInterceptor implements ServerInterceptor {
     } else {
       return Optional.empty();
     }
+  }
+
+  private static class EmptyServerCallListener<ReqT> extends ServerCall.Listener<ReqT> {
+
   }
 }
