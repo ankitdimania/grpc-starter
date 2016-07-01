@@ -1,5 +1,6 @@
 package com.grootstock.math.di;
 
+import com.grootstock.interceptors.ContextHolderInterceptor;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -11,11 +12,13 @@ import com.grootstock.math.service.activity.Activity;
 import com.grootstock.math.service.activity.AddActivity;
 import com.grootstock.math.service.activity.DivideActivity;
 import com.grootstock.math.service.activity.MultiplyActivity;
+import com.grootstock.math.service.interceptors.AuthInterceptor;
 import com.grootstock.math.service.validator.DivideDivisorValidator;
 import com.grootstock.math.service.validator.Validator;
 import dagger.Module;
 import dagger.Provides;
-import io.grpc.BindableService;
+import io.grpc.ServerInterceptors;
+import io.grpc.ServerServiceDefinition;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -25,8 +28,11 @@ import java.util.List;
 public class MathServiceModule {
 
   @Provides
-  BindableService provideMathService(MathService mathService) {
-    return mathService;
+  ServerServiceDefinition provideMathService(MathService mathService) {
+    ServerServiceDefinition mathServiceDef = ServerInterceptors.intercept(mathService,
+            new AuthInterceptor(),
+            new ContextHolderInterceptor());
+    return mathServiceDef;
   }
 
   @Provides

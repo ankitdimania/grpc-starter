@@ -50,9 +50,9 @@ public class HelloWorldServer {
 
   private void start() throws IOException {
     server = ServerBuilder.forPort(port)
-        .addService(new GreeterImpl())
-        .build()
-        .start();
+            .addService(new GreeterImpl())
+            .build()
+            .start();
     logger.info("Server started, listening on " + port);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -82,6 +82,10 @@ public class HelloWorldServer {
 
   /**
    * Main launches the server from the command line.
+   *
+   * @param args Command Line
+   * @throws IOException          server IO issue
+   * @throws InterruptedException server interrupted while wait
    */
   public static void main(String[] args) throws IOException, InterruptedException {
     final HelloWorldServer server = new HelloWorldServer();

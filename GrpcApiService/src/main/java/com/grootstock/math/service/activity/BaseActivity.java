@@ -1,6 +1,5 @@
 package com.grootstock.math.service.activity;
 
-import com.grootstock.ContextHolder;
 import com.grootstock.math.service.validator.Validator;
 import io.grpc.Status;
 import io.grpc.StatusException;
@@ -33,10 +32,7 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
    */
   public void perform(ReqT request, StreamObserver<ResT> responseObserver) {
     try {
-      ContextHolder contextHolder = ContextHolder.init();
       log.info("Processing " + getClass().getSimpleName());
-      //TODO: Metric Setup
-
       performValidations(request);
       log.trace("processing request");
       ResT response = performInternal(request);
@@ -45,15 +41,13 @@ public abstract class BaseActivity<ReqT, ResT> implements Activity<ReqT, ResT> {
       responseObserver.onCompleted();
       log.info("Processing Completed!!!");
     } catch (StatusException | StatusRuntimeException ex) {
-      responseObserver.onError(ex);
       log.error("Exception thrown", ex);
+      responseObserver.onError(ex);
     } catch (Exception ex) {
+      log.error("Exception thrown", ex);
       Status status = Status.INTERNAL
               .withDescription("Server Issue: [" + ex.getClass() + "] " + ex.getMessage());
       responseObserver.onError(status.asException());
-      log.error("Exception thrown", ex);
-    } finally {
-      ContextHolder.remove();
     }
   }
 

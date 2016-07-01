@@ -31,6 +31,7 @@
 
 package com.grootstock.helloworld;
 
+import com.grootstock.helloworld.interceptors.MathClientAuthInterceptorBuilder;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -38,6 +39,8 @@ import com.grootstock.math.DivideResponse;
 import com.grootstock.math.MathServiceGrpc;
 import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
+import io.grpc.Channel;
+import io.grpc.ClientInterceptors;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -54,6 +57,7 @@ public class MathClient {
 
   private final ManagedChannel channel;
   private final MathServiceGrpc.MathServiceBlockingClient blockingStub;
+  private final String API_KEY = "abcde"; // load from secure channel/config file
 
   /**
    * Construct client connecting to Math server at {@code host:port}.
@@ -62,7 +66,8 @@ public class MathClient {
     channel = ManagedChannelBuilder.forAddress(host, port)
             .usePlaintext(true)
             .build();
-    blockingStub = MathServiceGrpc.newBlockingStub(channel);
+    Channel authChannel = ClientInterceptors.intercept(channel, MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
+    blockingStub = MathServiceGrpc.newBlockingStub(authChannel);
   }
 
   public void shutdown() throws InterruptedException {

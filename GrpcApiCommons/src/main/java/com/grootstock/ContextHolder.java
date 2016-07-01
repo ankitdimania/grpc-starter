@@ -1,6 +1,7 @@
 package com.grootstock;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -10,6 +11,7 @@ public class ContextHolder {
 
   @Getter private String requestId = generateGuid();
   @Getter private long threadId = Thread.currentThread().getId();
+  @Getter @Setter private String account;
 
   static SecureRandom numberGenerator = new SecureRandom();
 
@@ -18,10 +20,13 @@ public class ContextHolder {
   }
 
   private static String generateGuid() {
-    byte[] randomBytes = new byte[16];
+    // byte[15] should generate guid of length 20
+    // byte[16] will generate guid of length 22, which is then appended with '=='
+    byte[] randomBytes = new byte[15];
     numberGenerator.nextBytes(randomBytes);
 
-    return Base64.getUrlEncoder().encodeToString(randomBytes).replaceAll("=", "");
+    String guid = Base64.getUrlEncoder().encodeToString(randomBytes);
+    return guid.replaceAll("=", "");
   }
 
   /**
@@ -30,17 +35,9 @@ public class ContextHolder {
    * @return new ContextHolder
    */
   public static ContextHolder init() {
-    ContextHolder previousContextHolder = get();
-    if (previousContextHolder != null) {
-      throw new IllegalStateException("ContextHolder already present:" + previousContextHolder);
-    }
     ContextHolder contextHolder = new ContextHolder();
     storage.set(contextHolder);
     return contextHolder;
-  }
-
-  public static void remove() {
-    storage.remove();
   }
 
   private ContextHolder() {

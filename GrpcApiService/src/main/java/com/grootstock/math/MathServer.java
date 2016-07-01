@@ -19,9 +19,10 @@ public class MathServer {
 
   private void start() throws IOException {
     server = ServerBuilder.forPort(port)
-        .addService(DaggerMathServiceComponent.create().createService())
-        .build()
-        .start();
+            .addService(DaggerMathServiceComponent.create().createMathService())
+            //.addService(DaggerMathServiceComponent.create().createPingService())
+            .build()
+            .start();
     log.info("Server started, listening on " + port);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -51,6 +52,10 @@ public class MathServer {
 
   /**
    * Main launches the server from the command line.
+   *
+   * @param args Command Line
+   * @throws IOException server IO issue
+   * @throws InterruptedException server interrupted while wait
    */
   public static void main(String[] args) throws IOException, InterruptedException {
     final MathServer server = new MathServer();
