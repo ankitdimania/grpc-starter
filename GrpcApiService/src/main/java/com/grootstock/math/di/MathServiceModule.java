@@ -1,5 +1,6 @@
 package com.grootstock.math.di;
 
+import com.grootstock.helloworld.GreeterImpl;
 import com.grootstock.interceptors.ContextHolderInterceptor;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
@@ -17,6 +18,7 @@ import com.grootstock.math.service.validator.DivideDivisorValidator;
 import com.grootstock.math.service.validator.Validator;
 import dagger.Module;
 import dagger.Provides;
+import io.grpc.BindableService;
 import io.grpc.ServerInterceptors;
 import io.grpc.ServerServiceDefinition;
 
@@ -28,11 +30,18 @@ import java.util.List;
 public class MathServiceModule {
 
   @Provides
+  @Named("math_service")
   ServerServiceDefinition provideMathService(MathService mathService) {
     ServerServiceDefinition mathServiceDef = ServerInterceptors.intercept(mathService,
             new AuthInterceptor(),
             new ContextHolderInterceptor());
     return mathServiceDef;
+  }
+
+  @Provides
+  @Named("ping_service")
+  BindableService providePingService(GreeterImpl greeter) {
+    return greeter;
   }
 
   @Provides

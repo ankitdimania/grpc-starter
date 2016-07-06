@@ -56,7 +56,8 @@ public class MathClient {
   private static final Logger logger = Logger.getLogger(MathClient.class.getName());
 
   private final ManagedChannel channel;
-  private final MathServiceGrpc.MathServiceBlockingClient blockingStub;
+  private final MathServiceGrpc.MathServiceBlockingClient mathServiceBlockingClient;
+  private final GreeterGrpc.GreeterBlockingStub greeterBlockingStub;
   private static final String API_KEY = "abcde"; // load from secure channel/config file
 
   /**
@@ -72,11 +73,30 @@ public class MathClient {
     Channel authChannel = ClientInterceptors.intercept(
             channel,
             MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
-    blockingStub = MathServiceGrpc.newBlockingStub(authChannel);
+    mathServiceBlockingClient = MathServiceGrpc.newBlockingStub(authChannel);
+    greeterBlockingStub = GreeterGrpc.newBlockingStub(channel);
   }
 
   public void shutdown() throws InterruptedException {
     channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+  }
+
+  /**
+   * Say hello to server.
+   *
+   * @param name your name
+   */
+  public String greet(String name) {
+    logger.info("Will try to greet " + name + " ...");
+    HelloRequest request = HelloRequest.newBuilder().setName(name).build();
+    HelloReply response;
+    try {
+      response = greeterBlockingStub.sayHello(request);
+    } catch (StatusRuntimeException e) {
+      logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+      throw new RuntimeException("RPC failed: " + e.getStatus());
+    }
+    return response.getMessage();
   }
 
   /**
@@ -91,7 +111,7 @@ public class MathClient {
     AddRequest request = AddRequest.newBuilder().setA(a).setB(b).build();
     AddResponse response;
     try {
-      response = blockingStub.add(request);
+      response = mathServiceBlockingClient.add(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       throw new RuntimeException("RPC failed: " + e.getStatus());
@@ -111,7 +131,7 @@ public class MathClient {
     MultiplyRequest request = MultiplyRequest.newBuilder().setA(a).setB(b).build();
     MultiplyResponse response;
     try {
-      response = blockingStub.multiply(request);
+      response = mathServiceBlockingClient.multiply(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       throw new RuntimeException("RPC failed: " + e.getStatus());
@@ -131,7 +151,7 @@ public class MathClient {
     DivideRequest request = DivideRequest.newBuilder().setDividend(a).setDivisor(b).build();
     DivideResponse response;
     try {
-      response = blockingStub.divide(request);
+      response = mathServiceBlockingClient.divide(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
       throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
@@ -148,8 +168,10 @@ public class MathClient {
   public static void main(String[] args) throws Exception {
     MathClient client = new MathClient("localhost", 50051);
     try {
+      String user = "Ankit Dimania";
       long a = 15;
       long b = 2;
+      logger.info("Greeting: " + client.greet(user));
       logger.info("Sum of " + a + " and " + b + " = " + client.add(a, b));
       logger.info("Product of " + a + " and " + b + " = " + client.multiply(a, b));
       logger.info("Division of " + a + " and " + b + " = " + client.divide(a, b));

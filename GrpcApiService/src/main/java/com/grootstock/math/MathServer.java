@@ -1,6 +1,7 @@
 package com.grootstock.math;
 
 import com.grootstock.math.di.DaggerMathServiceComponent;
+import com.grootstock.math.di.MathServiceComponent;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,10 @@ public class MathServer {
   private Server server;
 
   private void start() throws IOException {
+    MathServiceComponent dagger = DaggerMathServiceComponent.create();
     server = ServerBuilder.forPort(port)
-            .addService(DaggerMathServiceComponent.create().createMathService())
-            //.addService(DaggerMathServiceComponent.create().createPingService())
+            .addService(dagger.createMathService())
+            .addService(dagger.createPingService())
             .build()
             .start();
     log.info("Server started, listening on " + port);
@@ -54,7 +56,7 @@ public class MathServer {
    * Main launches the server from the command line.
    *
    * @param args Command Line
-   * @throws IOException server IO issue
+   * @throws IOException          server IO issue
    * @throws InterruptedException server interrupted while wait
    */
   public static void main(String[] args) throws IOException, InterruptedException {
