@@ -2,7 +2,7 @@ package com.grootstock.math.service.interceptors;
 
 import com.grootstock.ContextHolder;
 import io.grpc.Metadata;
-import io.grpc.Metadata.AsciiMarshaller;
+import io.grpc.Metadata.Key;
 import io.grpc.MethodDescriptor;
 import io.grpc.ServerCall;
 import io.grpc.ServerCallHandler;
@@ -12,24 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 import static io.grpc.Metadata.Key.of;
 
 @Slf4j
 public class AuthInterceptor implements ServerInterceptor {
 
   private static final String AUTH_KEY = "authorization";
-  private static final AsciiMarshaller<String> AUTH_KEY_MARSHLER = new AsciiMarshaller<String>() {
-    @Override
-    public String toAsciiString(String s) {
-      return s;
-    }
-
-    @Override
-    public String parseAsciiString(String s) {
-      return s;
-    }
-  };
-  private static final Metadata.Key<String> AUTH_META_KEY = of(AUTH_KEY, AUTH_KEY_MARSHLER);
+  private static final Key<String> AUTH_META_KEY = of(AUTH_KEY, ASCII_STRING_MARSHALLER);
   private static final ServerCall.Listener<?> EMPTY_LISTENER = new EmptyServerCallListener<>();
 
   @SuppressWarnings("unchecked")
