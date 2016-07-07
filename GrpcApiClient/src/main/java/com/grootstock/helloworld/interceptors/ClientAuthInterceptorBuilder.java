@@ -12,7 +12,7 @@ import io.grpc.MethodDescriptor;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 import static io.grpc.Metadata.Key.of;
 
-public class MathClientAuthInterceptorBuilder {
+public class ClientAuthInterceptorBuilder {
 
   private static final String AUTH_KEY = "authorization";
   private static final Key<String> AUTH_META_KEY = of(AUTH_KEY, ASCII_STRING_MARSHALLER);

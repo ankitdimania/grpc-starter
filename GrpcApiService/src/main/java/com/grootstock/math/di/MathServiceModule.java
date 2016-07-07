@@ -19,7 +19,6 @@ import com.grootstock.math.service.validator.DivideDivisorValidator;
 import com.grootstock.math.service.validator.Validator;
 import dagger.Module;
 import dagger.Provides;
-import io.grpc.BindableService;
 import io.grpc.ServerInterceptors;
 import io.grpc.ServerServiceDefinition;
 
@@ -42,8 +41,11 @@ public class MathServiceModule {
 
   @Provides
   @Named("ping_service")
-  BindableService providePingService(GreeterImpl greeter) {
-    return greeter;
+  ServerServiceDefinition providePingService(GreeterImpl greeter) {
+    ServerServiceDefinition greeterServiceDef = ServerInterceptors.intercept(greeter,
+            new ServerCompressorInterceptor(),
+            new ContextHolderInterceptor());
+    return greeterServiceDef;
   }
 
   @Provides

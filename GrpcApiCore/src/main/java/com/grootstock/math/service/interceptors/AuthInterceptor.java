@@ -3,7 +3,6 @@ package com.grootstock.math.service.interceptors;
 import com.grootstock.ContextHolder;
 import io.grpc.Metadata;
 import io.grpc.Metadata.Key;
-import io.grpc.MethodDescriptor;
 import io.grpc.ServerCall;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
@@ -25,8 +24,7 @@ public class AuthInterceptor implements ServerInterceptor {
   @SuppressWarnings("unchecked")
   @Override
   public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
-          MethodDescriptor<ReqT, RespT> method,
-          ServerCall<RespT> call,
+          ServerCall<ReqT, RespT> call,
           Metadata headers,
           ServerCallHandler<ReqT, RespT> next) {
     log.info("Authenticating");
@@ -37,7 +35,7 @@ public class AuthInterceptor implements ServerInterceptor {
       if (apiKey.equals("abcde")) { // insert isAuthenticated logic
         ContextHolder contextHolder = ContextHolder.get();
         contextHolder.setAccount("random account" /*insert account*/);
-        return next.startCall(method, call, headers);
+        return next.startCall(call, headers);
       }
     }
 

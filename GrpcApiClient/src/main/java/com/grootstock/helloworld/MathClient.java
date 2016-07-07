@@ -31,7 +31,7 @@
 
 package com.grootstock.helloworld;
 
-import com.grootstock.helloworld.interceptors.MathClientAuthInterceptorBuilder;
+import com.grootstock.helloworld.interceptors.ClientCompressorInterceptor;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -41,6 +41,8 @@ import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
 import io.grpc.Channel;
 import io.grpc.ClientInterceptors;
+import io.grpc.Codec;
+import io.grpc.CompressorRegistry;
 import io.grpc.DecompressorRegistry;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -49,6 +51,8 @@ import io.grpc.StatusRuntimeException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.grootstock.helloworld.interceptors.ClientAuthInterceptorBuilder.buildAuthInterceptor;
 
 /**
  * A simple client that requests a greeting from the MathServer.
@@ -61,6 +65,11 @@ public class MathClient {
   private final GreeterGrpc.GreeterBlockingStub greeterBlockingStub;
   private static final String API_KEY = "abcde"; // load from secure channel/config file
 
+  // Message Compression
+  private Codec clientCodec = new Codec.Gzip();
+  private DecompressorRegistry clientDecompressors = DecompressorRegistry.emptyInstance();
+  private CompressorRegistry clientCompressors = CompressorRegistry.newEmptyInstance();
+
   /**
    * Construct client connecting to Math server at {@code host:port}.
    *
@@ -68,18 +77,22 @@ public class MathClient {
    * @param port port
    */
   public MathClient(String host, int port) {
+    clientCompressors.register(clientCodec);
+    clientDecompressors = clientDecompressors.with(clientCodec, true);
+
     channel = ManagedChannelBuilder.forAddress(host, port)
             .usePlaintext(true)
+            .compressorRegistry(clientCompressors)
+            .decompressorRegistry(clientDecompressors)
             .build();
     Channel authChannel = ClientInterceptors.intercept(
             channel,
-            MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
+            buildAuthInterceptor(API_KEY),
+            new ClientCompressorInterceptor());
     mathServiceBlockingClient = MathServiceGrpc
-            .newBlockingStub(authChannel)
-            .withCompression("gzip");
+            .newBlockingStub(authChannel);
     greeterBlockingStub = GreeterGrpc
-            .newBlockingStub(channel)
-            .withCompression("gzip");
+            .newBlockingStub(channel);
   }
 
   public void shutdown() throws InterruptedException {
@@ -101,7 +114,7 @@ public class MathClient {
       return response.getMessage();
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
+      throw new RuntimeException("RPC failed: " + e.getStatus(), e);
     }
   }
 
@@ -120,7 +133,7 @@ public class MathClient {
       response = mathServiceBlockingClient.add(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
+      throw new RuntimeException("RPC failed: " + e.getStatus(), e);
     }
     return response.getSum();
   }
@@ -140,7 +153,7 @@ public class MathClient {
       response = mathServiceBlockingClient.multiply(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
+      throw new RuntimeException("RPC failed: " + e.getStatus(), e);
     }
     return response.getProduct();
   }
@@ -160,7 +173,7 @@ public class MathClient {
       response = mathServiceBlockingClient.divide(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
+      throw new RuntimeException("RPC failed: " + e.getStatus(), e);
     }
     return response.getQuotient();
   }

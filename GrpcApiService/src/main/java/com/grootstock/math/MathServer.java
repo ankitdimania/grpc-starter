@@ -2,6 +2,9 @@ package com.grootstock.math;
 
 import com.grootstock.math.di.DaggerMathServiceComponent;
 import com.grootstock.math.di.MathServiceComponent;
+import io.grpc.Codec;
+import io.grpc.CompressorRegistry;
+import io.grpc.DecompressorRegistry;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +20,22 @@ public class MathServer {
   /* The port on which the server should run */
   private int port = 50051;
   private Server server;
+  private Codec serverCodec = new Codec.Gzip();
+  private DecompressorRegistry serverDecompressors = DecompressorRegistry.emptyInstance();
+  private CompressorRegistry serverCompressors = CompressorRegistry.newEmptyInstance();
+
+  private MathServer() {
+    serverCompressors.register(serverCodec);
+    serverDecompressors = serverDecompressors.with(serverCodec, true);
+  }
 
   private void start() throws IOException {
     MathServiceComponent dagger = DaggerMathServiceComponent.create();
     server = ServerBuilder.forPort(port)
             .addService(dagger.createMathService())
             .addService(dagger.createPingService())
+            .compressorRegistry(serverCompressors)
+            .decompressorRegistry(serverDecompressors)
             .build()
             .start();
     log.info("Server started, listening on " + port);
