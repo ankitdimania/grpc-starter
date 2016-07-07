@@ -2,6 +2,7 @@ package com.grootstock.math.di;
 
 import com.grootstock.helloworld.GreeterImpl;
 import com.grootstock.interceptors.ContextHolderInterceptor;
+import com.grootstock.interceptors.ServerCompressorInterceptor;
 import com.grootstock.math.AddRequest;
 import com.grootstock.math.AddResponse;
 import com.grootstock.math.DivideRequest;
@@ -34,6 +35,7 @@ public class MathServiceModule {
   ServerServiceDefinition provideMathService(MathService mathService) {
     ServerServiceDefinition mathServiceDef = ServerInterceptors.intercept(mathService,
             new AuthInterceptor(),
+            new ServerCompressorInterceptor(),
             new ContextHolderInterceptor());
     return mathServiceDef;
   }

@@ -41,6 +41,7 @@ import com.grootstock.math.MultiplyRequest;
 import com.grootstock.math.MultiplyResponse;
 import io.grpc.Channel;
 import io.grpc.ClientInterceptors;
+import io.grpc.DecompressorRegistry;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -73,8 +74,12 @@ public class MathClient {
     Channel authChannel = ClientInterceptors.intercept(
             channel,
             MathClientAuthInterceptorBuilder.buildAuthInterceptor(API_KEY));
-    mathServiceBlockingClient = MathServiceGrpc.newBlockingStub(authChannel);
-    greeterBlockingStub = GreeterGrpc.newBlockingStub(channel);
+    mathServiceBlockingClient = MathServiceGrpc
+            .newBlockingStub(authChannel)
+            .withCompression("gzip");
+    greeterBlockingStub = GreeterGrpc
+            .newBlockingStub(channel)
+            .withCompression("gzip");
   }
 
   public void shutdown() throws InterruptedException {
@@ -85,18 +90,19 @@ public class MathClient {
    * Say hello to server.
    *
    * @param name your name
+   * @return Greetings from Server
    */
   public String greet(String name) {
     logger.info("Will try to greet " + name + " ...");
     HelloRequest request = HelloRequest.newBuilder().setName(name).build();
-    HelloReply response;
+
     try {
-      response = greeterBlockingStub.sayHello(request);
+      HelloReply response = greeterBlockingStub.sayHello(request);
+      return response.getMessage();
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus());
+      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
     }
-    return response.getMessage();
   }
 
   /**
@@ -114,7 +120,7 @@ public class MathClient {
       response = mathServiceBlockingClient.add(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus());
+      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
     }
     return response.getSum();
   }
@@ -134,7 +140,7 @@ public class MathClient {
       response = mathServiceBlockingClient.multiply(request);
     } catch (StatusRuntimeException e) {
       logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      throw new RuntimeException("RPC failed: " + e.getStatus());
+      throw new RuntimeException("RPC failed: " + e.getStatus() + " [" + e.getMessage() + "]", e);
     }
     return response.getProduct();
   }
