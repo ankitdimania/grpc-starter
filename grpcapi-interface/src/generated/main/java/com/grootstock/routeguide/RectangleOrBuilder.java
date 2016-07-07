@@ -8,52 +8,52 @@ public interface RectangleOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .routeguide.Point lo = 1;</code>
-   *
    * <pre>
    * One corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point lo = 1;</code>
    */
   boolean hasLo();
   /**
-   * <code>optional .routeguide.Point lo = 1;</code>
-   *
    * <pre>
    * One corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point lo = 1;</code>
    */
   com.grootstock.routeguide.Point getLo();
   /**
-   * <code>optional .routeguide.Point lo = 1;</code>
-   *
    * <pre>
    * One corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point lo = 1;</code>
    */
   com.grootstock.routeguide.PointOrBuilder getLoOrBuilder();
 
   /**
-   * <code>optional .routeguide.Point hi = 2;</code>
-   *
    * <pre>
    * The other corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point hi = 2;</code>
    */
   boolean hasHi();
   /**
-   * <code>optional .routeguide.Point hi = 2;</code>
-   *
    * <pre>
    * The other corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point hi = 2;</code>
    */
   com.grootstock.routeguide.Point getHi();
   /**
-   * <code>optional .routeguide.Point hi = 2;</code>
-   *
    * <pre>
    * The other corner of the rectangle.
    * </pre>
+   *
+   * <code>optional .routeguide.Point hi = 2;</code>
    */
   com.grootstock.routeguide.PointOrBuilder getHiOrBuilder();
 }

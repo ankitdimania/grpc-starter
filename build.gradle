@@ -67,7 +67,7 @@ subprojects {
 
                 // The version of protoc must match protobuf-java.
                 // protobuf-java could be a transitive dependency through grpc.
-                protobuf_protoc: "com.google.protobuf:protoc:3.0.0-beta-2",
+                protobuf_protoc: "com.google.protobuf:protoc:3.0.0-beta-3",
 
                 // DI: dagger
                 dagger         : 'com.google.dagger:dagger:2.5',
