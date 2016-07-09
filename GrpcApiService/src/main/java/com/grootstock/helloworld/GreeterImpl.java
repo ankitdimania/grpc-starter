@@ -4,7 +4,7 @@ import io.grpc.stub.StreamObserver;
 
 import javax.inject.Inject;
 
-public class GreeterImpl extends GreeterGrpc.AbstractGreeter {
+public class GreeterImpl extends GreeterGrpc.GreeterImplBase {
 
   @Inject
   public GreeterImpl() {

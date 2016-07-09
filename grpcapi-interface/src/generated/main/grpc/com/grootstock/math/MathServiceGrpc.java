@@ -21,7 +21,7 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 0.14.1)",
+    value = "by gRPC proto compiler (version 0.15.0)",
     comments = "Source: math.proto")
 public class MathServiceGrpc {
 
@@ -30,7 +30,7 @@ public class MathServiceGrpc {
   public static final String SERVICE_NAME = "math.MathService";
 
   // Static method descriptors that strictly reflect the proto.
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<com.grootstock.math.AddRequest,
       com.grootstock.math.AddResponse> METHOD_ADD =
       io.grpc.MethodDescriptor.create(
@@ -39,7 +39,7 @@ public class MathServiceGrpc {
               "math.MathService", "Add"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.grootstock.math.AddRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.grootstock.math.AddResponse.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<com.grootstock.math.MultiplyRequest,
       com.grootstock.math.MultiplyResponse> METHOD_MULTIPLY =
       io.grpc.MethodDescriptor.create(
@@ -48,7 +48,7 @@ public class MathServiceGrpc {
               "math.MathService", "multiply"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.grootstock.math.MultiplyRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.grootstock.math.MultiplyResponse.getDefaultInstance()));
-  @io.grpc.ExperimentalApi
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<com.grootstock.math.DivideRequest,
       com.grootstock.math.DivideResponse> METHOD_DIVIDE =
       io.grpc.MethodDescriptor.create(
@@ -86,7 +86,7 @@ public class MathServiceGrpc {
    * The greeting service definition.
    * </pre>
    */
-  public static interface MathService {
+  @java.lang.Deprecated public static interface MathService {
 
     /**
      * <pre>
@@ -113,8 +113,8 @@ public class MathServiceGrpc {
         io.grpc.stub.StreamObserver<com.grootstock.math.DivideResponse> responseObserver);
   }
 
-  @io.grpc.ExperimentalApi
-  public static abstract class AbstractMathService implements MathService, io.grpc.BindableService {
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1469")
+  public static abstract class MathServiceImplBase implements MathService, io.grpc.BindableService {
 
     @java.lang.Override
     public void add(com.grootstock.math.AddRequest request,
@@ -144,7 +144,7 @@ public class MathServiceGrpc {
    * The greeting service definition.
    * </pre>
    */
-  public static interface MathServiceBlockingClient {
+  @java.lang.Deprecated public static interface MathServiceBlockingClient {
 
     /**
      * <pre>
@@ -173,7 +173,7 @@ public class MathServiceGrpc {
    * The greeting service definition.
    * </pre>
    */
-  public static interface MathServiceFutureClient {
+  @java.lang.Deprecated public static interface MathServiceFutureClient {
 
     /**
      * <pre>
@@ -314,6 +314,8 @@ public class MathServiceGrpc {
     }
   }
 
+  @java.lang.Deprecated public static abstract class AbstractMathService extends MathServiceImplBase {}
+
   private static final int METHODID_ADD = 0;
   private static final int METHODID_MULTIPLY = 1;
   private static final int METHODID_DIVIDE = 2;
@@ -363,9 +365,16 @@ public class MathServiceGrpc {
     }
   }
 
-  public static io.grpc.ServerServiceDefinition bindService(
+  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
+    return new io.grpc.ServiceDescriptor(SERVICE_NAME,
+        METHOD_ADD,
+        METHOD_MULTIPLY,
+        METHOD_DIVIDE);
+  }
+
+  @java.lang.Deprecated public static io.grpc.ServerServiceDefinition bindService(
       final MathService serviceImpl) {
-    return io.grpc.ServerServiceDefinition.builder(SERVICE_NAME)
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
         .addMethod(
           METHOD_ADD,
           asyncUnaryCall(

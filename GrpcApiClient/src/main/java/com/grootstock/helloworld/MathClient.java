@@ -61,7 +61,7 @@ public class MathClient {
   private static final Logger logger = Logger.getLogger(MathClient.class.getName());
 
   private final ManagedChannel channel;
-  private final MathServiceGrpc.MathServiceBlockingClient mathServiceBlockingClient;
+  private final MathServiceGrpc.MathServiceBlockingStub mathServiceBlockingClient;
   private final GreeterGrpc.GreeterBlockingStub greeterBlockingStub;
   private static final String API_KEY = "abcde"; // load from secure channel/config file
 
@@ -85,14 +85,16 @@ public class MathClient {
             .compressorRegistry(clientCompressors)
             .decompressorRegistry(clientDecompressors)
             .build();
-    Channel authChannel = ClientInterceptors.intercept(
+    Channel compressorChannel = ClientInterceptors.intercept(
             channel,
-            buildAuthInterceptor(API_KEY),
             new ClientCompressorInterceptor());
+    Channel authChannel = ClientInterceptors.intercept(
+            compressorChannel,
+            buildAuthInterceptor(API_KEY));
     mathServiceBlockingClient = MathServiceGrpc
             .newBlockingStub(authChannel);
     greeterBlockingStub = GreeterGrpc
-            .newBlockingStub(channel);
+            .newBlockingStub(compressorChannel);
   }
 
   public void shutdown() throws InterruptedException {

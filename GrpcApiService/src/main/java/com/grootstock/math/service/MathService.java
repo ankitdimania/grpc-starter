@@ -13,7 +13,7 @@ import io.grpc.stub.StreamObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class MathService extends MathServiceGrpc.AbstractMathService {
+public class MathService extends MathServiceGrpc.MathServiceImplBase {
   private Activity<AddRequest, AddResponse> addActivity;
   private Activity<MultiplyRequest, MultiplyResponse> multiplyActivity;
   private Activity<DivideRequest, DivideResponse> divideActivity;

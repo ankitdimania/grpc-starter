@@ -52,7 +52,7 @@ subprojects {
     }
 
     ext {
-        def grpcVersion = '0.14.1' // '0.14.1'
+        def grpcVersion = '0.15.0' // '0.14.1'
 
         libraries = [
                 // Annotation processing
