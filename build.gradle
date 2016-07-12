@@ -1,13 +1,15 @@
 description = 'Grpc API'
 
+allprojects {
+    group = 'com.grootstock'
+    version = '0.0.1-SNAPSHOT' // CURRENT_GRPC_API_VERSION
+}
+
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'java'
     apply plugin: 'signing'
     apply plugin: 'jacoco'
-
-    group = 'com.grootstock'
-    version = '0.0.1-SNAPSHOT' // CURRENT_GRPC_API_VERSION
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -76,11 +78,16 @@ subprojects {
                 // lombok
                 lombok         : 'org.projectlombok:lombok:1.16.+',
 
+                // ORM
+                hibernate      : 'org.hibernate:hibernate-core:5.+',
+                hibernate_jpa  : 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.+',
+                mysql          : 'mysql:mysql-connector-java:+',
+
                 // SLF4J logging
                 slf4j          : 'org.slf4j:slf4j-api:1.7.+',
                 log4j_slf4j    : 'org.apache.logging.log4j:log4j-slf4j-impl:2.+',
                 log4j_core     : 'org.apache.logging.log4j:log4j-core:2.+',
-                disruptor      : 'com.lmax:disruptor:3.3.+',
+                disruptor      : 'com.lmax:disruptor:3.+',
 
                 // Test dependencies.
                 junit          : 'junit:junit:4.12',

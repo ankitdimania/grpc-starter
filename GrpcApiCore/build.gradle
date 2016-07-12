@@ -4,6 +4,7 @@ apply plugin: 'idea'
 dependencies {
     compile project(':grpcapi-interface')
     compile project(':GrpcApiCommons')
+    compile project(':GrpcApiAdapter')
 
     // DI
     compile libraries.dagger

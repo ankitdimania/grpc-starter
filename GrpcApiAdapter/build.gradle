@@ -3,7 +3,7 @@ apply plugin: 'idea'
 
 dependencies {
     compile project(':grpcapi-interface')
-    compile project(':GrpcApiModels')
+    compile project(':GrpcApiCommons')
 
     // DI
     compile libraries.dagger
@@ -12,4 +12,8 @@ dependencies {
     // lombok
     compileOnly libraries.lombok
     apt libraries.lombok
+
+    // ORM
+    compile libraries.hibernate
+    compile libraries.mysql
 }

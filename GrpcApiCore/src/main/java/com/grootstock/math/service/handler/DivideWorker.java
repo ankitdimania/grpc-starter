@@ -1,5 +1,6 @@
 package com.grootstock.math.service.handler;
 
+import com.grootstock.adapter.MySqlAdapter;
 import com.grootstock.math.service.response.DivideResponseBuilder;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
@@ -10,14 +11,17 @@ import javax.inject.Named;
 
 @Slf4j
 public class DivideWorker extends BaseWorker {
+  private MySqlAdapter mySqlAdapter;
+
   // Instance variables are thread safe
   long dividend;
   long divisor;
 
 
   @Inject
-  public DivideWorker(@Named("RequestId") String requestId) {
+  public DivideWorker(@Named("RequestId") String requestId, MySqlAdapter mySqlAdapter) {
     super(requestId);
+    this.mySqlAdapter = mySqlAdapter;
   }
 
   /**
@@ -53,7 +57,8 @@ public class DivideWorker extends BaseWorker {
 
   private void veryComplicatedOperation() {
     try {
-      Thread.sleep(9000);
+      mySqlAdapter.getCompanies();
+      Thread.sleep(2000);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }

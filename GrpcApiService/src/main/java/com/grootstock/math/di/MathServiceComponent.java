@@ -1,13 +1,23 @@
 package com.grootstock.math.di;
 
+import com.grootstock.adapter.di.AdapterModule;
 import com.grootstock.di.CommonsModule;
 import com.grootstock.math.service.di.MathCoreModule;
 import dagger.Component;
 import io.grpc.ServerServiceDefinition;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
-@Component(modules = {CommonsModule.class, MathCoreModule.class, MathServiceModule.class})
+@Singleton
+@Component(
+        modules = {
+                CommonsModule.class,
+                MathCoreModule.class,
+                AdapterModule.class,
+                MathServiceModule.class
+        }
+)
 public interface MathServiceComponent {
   @Named("math_service")
   ServerServiceDefinition createMathService();
