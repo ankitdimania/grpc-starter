@@ -4,10 +4,12 @@ import com.grootstock.adapter.MySqlAdapter;
 import com.grootstock.math.service.response.DivideResponseBuilder;
 import com.grootstock.math.DivideRequest;
 import com.grootstock.math.DivideResponse;
+import com.grootstock.models.Company;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 
 @Slf4j
 public class DivideWorker extends BaseWorker {
@@ -57,7 +59,10 @@ public class DivideWorker extends BaseWorker {
 
   private void veryComplicatedOperation() {
     try {
-      mySqlAdapter.getCompanies();
+      List<Company> companies = mySqlAdapter.getCompanies();
+      for (int i = 0; i < 10; i++) {
+        log.info(companies.get(i).getName());
+      }
       Thread.sleep(2000);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);

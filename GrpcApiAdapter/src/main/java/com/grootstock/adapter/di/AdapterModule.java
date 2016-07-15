@@ -1,5 +1,6 @@
 package com.grootstock.adapter.di;
 
+import com.grootstock.models.Company;
 import dagger.Module;
 import dagger.Provides;
 import org.hibernate.SessionFactory;
@@ -20,6 +21,7 @@ public class AdapterModule {
   public static SessionFactory provideSessionFactory() {
     try {
       Configuration configuration = new Configuration().configure();
+      configuration.addAnnotatedClass(Company.class);
       ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
               .applySettings(configuration.getProperties())
               .build();

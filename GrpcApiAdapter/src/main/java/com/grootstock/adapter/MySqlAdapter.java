@@ -1,9 +1,12 @@
 package com.grootstock.adapter;
 
+import com.grootstock.models.Company;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class MySqlAdapter {
   private SessionFactory sessionFactory;
@@ -16,14 +19,13 @@ public class MySqlAdapter {
   /**
    * Get List of Companies.
    */
-  public void getCompanies() {
+  public List<Company> getCompanies() {
     @lombok.Cleanup Session session = sessionFactory.openSession();
-    // session.getTransaction().begin();
 
-    // session.get
-    // session.save(user);
-    // session.getTransaction().commit();
-    session.close();
+    Query<Company> query = session.createQuery("from Company", Company.class);
+    List<Company> companies = query.list();
+
+    return companies;
   }
 
 }
