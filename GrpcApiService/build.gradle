@@ -60,6 +60,7 @@ import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 
 // Mac Users:
 // install docker toolbox and run gradle build inside docker session
@@ -111,10 +112,16 @@ task buildServiceImage(type: DockerBuildImage) {
     dependsOn createDockerfile
 }
 
+task removeImage(type: DockerRemoveImage) {
+    imageId = buildServiceImage.getImageId()
+}
+
 task pushImage(type: DockerPushImage) {
     description = 'Pushes created Docker image to the repository.'
-    dependsOn buildServiceImage
     imageName = buildServiceImage.getTag()
+
+    dependsOn buildServiceImage
+    finalizedBy removeImage
 }
 
 // Run tests
