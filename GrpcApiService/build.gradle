@@ -67,7 +67,9 @@ docker {
     url = System.env.DOCKER_HOST ?
             System.env.DOCKER_HOST.replace("tcp", "https") :
             'unix:///var/run/docker.sock'
-    certPath = new File(System.env.DOCKER_CERT_PATH)
+    if (System.env.DOCKER_CERT_PATH) {
+        certPath = new File(System.env.DOCKER_CERT_PATH)
+    }
 }
 
 def servicePort = 50051
