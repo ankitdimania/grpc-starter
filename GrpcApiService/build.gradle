@@ -64,10 +64,20 @@ import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 
 // Mac Users:
 // install docker toolbox and run gradle build inside docker session
+def dockerUrl() {
+    if (System.env.DOCKER_HOST) {
+        return System.env.DOCKER_HOST.replace("tcp", "https")
+    } else if (System.env.DOCKER_PORT) {
+        // available on teamcity due to volume link in docker
+        // sudo docker exec -it CI_agent_1 env|grep DOCKER
+        return System.env.DOCKER_PORT.replace("tcp", "https")
+    }
+    return 'unix:///var/run/docker.sock'
+}
+
 docker {
-    url = System.env.DOCKER_HOST ?
-            System.env.DOCKER_HOST.replace("tcp", "https") :
-            'unix:///var/run/docker.sock'
+    url = dockerUrl()
+
     if (System.env.DOCKER_CERT_PATH) {
         certPath = new File(System.env.DOCKER_CERT_PATH)
     }
