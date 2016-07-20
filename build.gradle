@@ -2,7 +2,7 @@ description = 'Grpc API'
 
 allprojects {
     group = 'com.grootstock'
-    version = '0.0.1-SNAPSHOT' // CURRENT_GRPC_API_VERSION
+    version = '0.1' // CURRENT_GRPC_API_VERSION
 }
 
 subprojects {
@@ -54,7 +54,7 @@ subprojects {
     }
 
     ext {
-        def grpcVersion = '0.15.0' // '0.14.1'
+        def grpcVersion = '0.15.0' // '0.15.0'
 
         libraries = [
                 // Annotation processing
@@ -70,6 +70,9 @@ subprojects {
                 // The version of protoc must match protobuf-java.
                 // protobuf-java could be a transitive dependency through grpc.
                 protobuf_protoc: "com.google.protobuf:protoc:3.0.0-beta-3",
+
+                // Docker plugin
+                gradle_docker  : "com.bmuschko:gradle-docker-plugin:3.+",
 
                 // DI: dagger
                 dagger         : 'com.google.dagger:dagger:2.5',
