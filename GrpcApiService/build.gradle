@@ -53,14 +53,15 @@ applicationDistribution.into('bin') {
 }
 
 // Docker
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
 
 // Mac Users:
 // install docker toolbox and run gradle build inside docker session
@@ -116,22 +117,35 @@ createDockerfile.dependsOn createDistCopy
 task buildServiceImage(type: DockerBuildImage) {
     dependsOn createDockerfile
     inputDir = createDockerfile.destFile.parentFile
-    // TODO: add build number to version tag
-    tag = "${project.applicationName.toLowerCase()}:${project.version}"
+    def hash = project.hasProperty('build.vcs.number') ? project.ext['build.vcs.number'].take(8) : 'dev'
+//    tag = "${project.applicationName.toLowerCase()}:${project.version}-${hash}"
+    tag = "grpc-starter:${project.version}-${hash}"
+    if (System.env.DOCKER_REGISTRY_USERNAME)
+        tag = "${System.env.DOCKER_REGISTRY_USERNAME}/${tag}"
 
     dependsOn createDockerfile
 }
 
-task removeImage(type: DockerRemoveImage) {
-    imageId = buildServiceImage.getImageId()
+
+def getRegistryCredentials = {
+    if (System.env.DOCKER_REGISTRY_USERNAME) {
+        def dockerRegistryCredentials = new DockerRegistryCredentials()
+        dockerRegistryCredentials.username = System.env.DOCKER_REGISTRY_USERNAME
+        dockerRegistryCredentials.email = System.env.DOCKER_REGISTRY_EMAIL
+        dockerRegistryCredentials.password = System.env.DOCKER_REGISTRY_PASSWORD
+        if (System.env.DOCKER_REGISTRY_URL) {
+            dockerRegistryCredentials.url = System.env.DOCKER_REGISTRY_URL
+        }
+        dockerRegistryCredentials
+    }
 }
 
-task pushImage(type: DockerPushImage) {
+task pushServiceImage(type: DockerPushImage) {
     description = 'Pushes created Docker image to the repository.'
     imageName = buildServiceImage.getTag()
+    registryCredentials = getRegistryCredentials()
 
     dependsOn buildServiceImage
-    finalizedBy removeImage
 }
 
 // Run tests
