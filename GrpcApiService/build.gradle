@@ -1,7 +1,6 @@
 apply plugin: 'net.ltgt.apt'
 apply plugin: 'application'
 apply plugin: 'idea'
-apply plugin: 'com.bmuschko.docker-remote-api'
 
 buildscript {
     dependencies {
@@ -12,8 +11,6 @@ buildscript {
 description = 'GrpcAPI: Service'
 
 startScripts.enabled = false
-
-//apply from: 'gradle/docker.gradle'
 
 dependencies {
     compile project(':grpcapi-interface')
@@ -52,124 +49,4 @@ applicationDistribution.into('bin') {
     fileMode = 0755
 }
 
-// Docker
-import com.bmuschko.gradle.docker.DockerRegistryCredentials
-import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
-
-
-// Mac Users:
-// install docker toolbox and run gradle build inside docker session
-def dockerUrl() {
-    if (System.env.DOCKER_HOST) {
-        return System.env.DOCKER_HOST.replace("tcp", "https")
-    } else if (System.env.DOCKER_PORT) {
-        // available on teamcity due to volume link in docker
-        // sudo docker exec -it CI_agent_1 env|grep DOCKER
-        return System.env.DOCKER_PORT.replace("tcp", "https")
-    }
-    return 'unix:///var/run/docker.sock'
-}
-
-docker {
-    url = dockerUrl()
-
-    if (System.env.DOCKER_CERT_PATH) {
-        certPath = new File(System.env.DOCKER_CERT_PATH)
-    }
-}
-
-def servicePort = 50051
-
-Tar tarTask = project.tasks.getByName(ApplicationPlugin.TASK_DIST_TAR_NAME)
-
-def determineEntryPoint(Tar tarTask) {
-    String installDir = tarTask.archiveName - ".${tarTask.extension}"
-    "/$installDir/bin/$mathServer.applicationName".toString()
-}
-
-task createDockerfile(type: Dockerfile) {
-    destFile = project.file('build/docker/Dockerfile')
-    from 'java:8-jre'
-    maintainer 'Ankit Dimania "ankitdimania@gmail.com"'
-    exposePort servicePort
-    addFile tarTask.archivePath.name, '/'
-    entryPoint determineEntryPoint(tarTask)
-
-    dependsOn tarTask
-}
-
-task createDistCopy(type: Copy) {
-//    group = DockerRemoteApiPlugin.DEFAULT_TASK_GROUP
-    description = "Copies the distribution resources to a temporary directory for image creation."
-    dependsOn tarTask
-    from tarTask.archivePath
-    into createDockerfile.destFile.parentFile
-}
-
-createDockerfile.dependsOn createDistCopy
-
-task buildServiceImage(type: DockerBuildImage) {
-    dependsOn createDockerfile
-    inputDir = createDockerfile.destFile.parentFile
-    def hash = project.hasProperty('build.vcs.number') ? project.ext['build.vcs.number'].take(8) : 'dev'
-//    tag = "${project.applicationName.toLowerCase()}:${project.version}-${hash}"
-    tag = "grpc-starter:${project.version}-${hash}"
-    if (System.env.DOCKER_REGISTRY_USERNAME)
-        tag = "${System.env.DOCKER_REGISTRY_USERNAME}/${tag}"
-
-    dependsOn createDockerfile
-}
-
-
-def getRegistryCredentials = {
-    if (System.env.DOCKER_REGISTRY_USERNAME) {
-        def dockerRegistryCredentials = new DockerRegistryCredentials()
-        dockerRegistryCredentials.username = System.env.DOCKER_REGISTRY_USERNAME
-        dockerRegistryCredentials.email = System.env.DOCKER_REGISTRY_EMAIL
-        dockerRegistryCredentials.password = System.env.DOCKER_REGISTRY_PASSWORD
-        if (System.env.DOCKER_REGISTRY_URL) {
-            dockerRegistryCredentials.url = System.env.DOCKER_REGISTRY_URL
-        }
-        dockerRegistryCredentials
-    }
-}
-
-task pushServiceImage(type: DockerPushImage) {
-    description = 'Pushes created Docker image to the repository.'
-    imageName = buildServiceImage.getTag()
-    registryCredentials = getRegistryCredentials()
-
-    dependsOn buildServiceImage
-}
-
-// Run tests
-task createServiceContainer(type: DockerCreateContainer) {
-    dependsOn buildServiceImage
-    targetImageId { buildServiceImage.getImageId() }
-    portBindings = ["$servicePort:$servicePort"]
-}
-
-task startServiceContainer(type: DockerStartContainer) {
-    dependsOn createServiceContainer
-    targetContainerId { createServiceContainer.getContainerId() }
-}
-
-task removeServiceContainer(type: DockerRemoveContainer) {
-    targetContainerId { createServiceContainer.getContainerId() }
-}
-
-task stopServiceContainer(type: DockerStopContainer) {
-    targetContainerId { createServiceContainer.getContainerId() }
-    finalizedBy removeServiceContainer
-}
-
-task functionalTestService(type: Test) {
-    dependsOn startServiceContainer
-    finalizedBy stopServiceContainer
-}
+apply from: 'gradle/docker.gradle'
