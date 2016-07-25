@@ -28,3 +28,8 @@ GrpcApiService/build/distributions/GrpcApiService-0.1/bin/math-server
 
 # Docker Images
 [gRPC Starter](https://hub.docker.com/r/ankitdimania/grpc-starter/tags/)
+
+# Update gradle wrapper
+```shell
+./gradlew wrapper --gradle-version 3.0-milestone-2
+```
