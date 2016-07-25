@@ -18,6 +18,8 @@ public class MySqlAdapter {
 
   /**
    * Get List of Companies.
+   *
+   * @return List of Companies
    */
   public List<Company> getCompanies() {
     @lombok.Cleanup Session session = sessionFactory.openSession();

@@ -25,6 +25,7 @@ public class AppConfigFiles {
    * of Pattern "*.yaml".
    *
    * @return the resources in the order they are found
+   * @throws IOException if file io failed
    */
   public static List<InputStream> getResources() throws IOException {
     Pattern pattern = Pattern.compile(".*appconfig/[^/]*\\.yaml");
@@ -37,6 +38,7 @@ public class AppConfigFiles {
    *
    * @param pattern the pattern to match
    * @return the resources in the order they are found
+   * @throws IOException if file io failed
    */
   public static List<InputStream> getResources(final Pattern pattern) throws IOException {
     final ArrayList<InputStream> retval = new ArrayList<>();
@@ -62,6 +64,7 @@ public class AppConfigFiles {
     return retval;
   }
 
+  @SuppressWarnings("unchecked")
   private static ArrayList<InputStream> getResourcesFromJarFile(
           final File file,
           final Pattern pattern) throws IOException {

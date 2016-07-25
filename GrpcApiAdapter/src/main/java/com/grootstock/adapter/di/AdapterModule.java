@@ -16,6 +16,8 @@ public class AdapterModule {
 
   /**
    * Provides SessionFactory.
+   *
+   * @return SessionFactory
    */
   @Provides
   @Singleton

@@ -12,6 +12,11 @@ public class AppYamlConfig {
   private final AppEnvConfig envConfig;
   private final Map<String, Object> serviceConfigs;
 
+  /**
+   * Create configs from Yaml files.
+   *
+   * @param appEnvConfig EnvConfigs
+   */
   public AppYamlConfig(AppEnvConfig appEnvConfig) {
     this.envConfig = appEnvConfig;
     try {
@@ -36,7 +41,15 @@ public class AppYamlConfig {
     return envConfig.getEnvironment();
   }
 
-  private void add(Map<String, Map<String, Object>> serviceConfigs, Map<String, Map<String, Object>> configs) {
+  /**
+   * Add configs from {@code configs} to {@code serviceConfigs}.
+   *
+   * @param serviceConfigs Track Service Configs
+   * @param configs        Configs to Add
+   */
+  private void add(
+          Map<String, Map<String, Object>> serviceConfigs,
+          Map<String, Map<String, Object>> configs) {
     configs.forEach((envKey, config) -> {
       Map<String, Object> serviceConfig = serviceConfigs.get(envKey);
       if (serviceConfig == null) {
