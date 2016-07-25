@@ -50,7 +50,7 @@ subprojects {
 
     javadoc.options {
         encoding = 'UTF-8'
-        links 'https://docs.oracle.com/javase/8/docs/api/'
+        links = ['http://docs.oracle.com/javase/8/docs/api/']
     }
 
     ext {
