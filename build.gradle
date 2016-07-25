@@ -81,6 +81,10 @@ subprojects {
                 // lombok
                 lombok         : 'org.projectlombok:lombok:1.16.+',
 
+                commons_lang3  : 'org.apache.commons:commons-lang3:3.4',
+                commons_io     : 'commons-io:commons-io:2.+',
+                snake_yaml     : 'org.yaml:snakeyaml:+',
+
                 // ORM
                 hibernate      : 'org.hibernate:hibernate-core:5.+',
                 hibernate_jpa  : 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.+',

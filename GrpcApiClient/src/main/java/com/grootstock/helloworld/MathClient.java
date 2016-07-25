@@ -186,7 +186,8 @@ public class MathClient {
    * @throws Exception easy use
    */
   public static void main(String[] args) throws Exception {
-    MathClient client = new MathClient("localhost", 50051);
+    //    MathClient client = new MathClient("localhost", 50051);
+    MathClient client = new MathClient("api.grootstock.com", 50051);
     try {
       String user = "Ankit Dimania";
       long a = 15;
@@ -194,6 +195,18 @@ public class MathClient {
       logger.info("Greeting: " + client.greet(user));
       logger.info("Sum of " + a + " and " + b + " = " + client.add(a, b));
       logger.info("Product of " + a + " and " + b + " = " + client.multiply(a, b));
+      long start = System.nanoTime();
+      logger.setLevel(Level.SEVERE);
+      for (int i = 0; i++ < 2; ) {
+        long iStart = System.nanoTime();
+        client.greet(user);
+        client.add(a, b);
+        client.multiply(a, b);
+        logger.severe("Iteration: " + i + ", Time: "
+                + ((System.nanoTime() - iStart) / 1000) + " micro sec");
+      }
+
+      logger.severe("Total time: " + ((System.nanoTime() - start) / 1000) + " micro sec");
       logger.info("Division of " + a + " and " + b + " = " + client.divide(a, b));
     } finally {
       client.shutdown();

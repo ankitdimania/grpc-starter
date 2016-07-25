@@ -4,6 +4,7 @@ apply plugin: 'idea'
 dependencies {
     compile project(':grpcapi-interface')
     compile project(':GrpcApiModels')
+    compile project(':GrpcApiConfig')
 
     // DI
     compile libraries.dagger
@@ -12,4 +13,6 @@ dependencies {
     // lombok
     compileOnly libraries.lombok
     apt libraries.lombok
+
+    compile libraries.commons_lang3
 }

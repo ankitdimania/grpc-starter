@@ -1,0 +1,7 @@
+default:
+  test1: tissue
+
+beta:
+  test1: value
+  test2: 1
+  test3: 0

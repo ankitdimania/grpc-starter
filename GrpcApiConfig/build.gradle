@@ -1,0 +1,5 @@
+dependencies {
+    compile libraries.snake_yaml,
+            libraries.commons_lang3,
+            libraries.commons_io
+}

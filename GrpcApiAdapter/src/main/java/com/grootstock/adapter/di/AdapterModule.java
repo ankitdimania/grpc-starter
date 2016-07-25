@@ -1,5 +1,6 @@
 package com.grootstock.adapter.di;
 
+import com.grootstock.config.AppConfig;
 import com.grootstock.models.Company;
 import dagger.Module;
 import dagger.Provides;
@@ -21,6 +22,7 @@ public class AdapterModule {
   public static SessionFactory provideSessionFactory() {
     try {
       Configuration configuration = new Configuration().configure();
+      String environment = AppConfig.getEnvironment();
       configuration.addAnnotatedClass(Company.class);
       ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
               .applySettings(configuration.getProperties())

@@ -5,3 +5,5 @@ include 'GrpcApiCore'
 include 'GrpcApiCommons'
 include 'GrpcApiAdapter'
 include 'GrpcApiModels'
+include 'GrpcApiConfig'
+
