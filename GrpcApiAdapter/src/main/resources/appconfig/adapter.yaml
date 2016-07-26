@@ -1,0 +1,2 @@
+default:
+  hibernate_cfg: hibernate.cfg.xml

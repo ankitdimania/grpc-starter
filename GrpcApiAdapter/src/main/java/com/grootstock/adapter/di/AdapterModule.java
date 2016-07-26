@@ -21,11 +21,11 @@ public class AdapterModule {
    */
   @Provides
   @Singleton
-  public static SessionFactory provideSessionFactory() {
+  public SessionFactory provideSessionFactory() {
     try {
-      Configuration configuration = new Configuration().configure();
-      String environment = AppConfig.getEnvironment();
-      configuration.addAnnotatedClass(Company.class);
+      String hibernateCfg = AppConfig.getConfig("hibernate_cfg");
+      Configuration configuration = new Configuration().configure(hibernateCfg);
+      addAnnotatedClass(configuration);
       ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
               .applySettings(configuration.getProperties())
               .build();
@@ -35,5 +35,8 @@ public class AdapterModule {
     }
   }
 
+  public void addAnnotatedClass(Configuration configuration) {
+    configuration.addAnnotatedClass(Company.class);
+  }
 
 }
