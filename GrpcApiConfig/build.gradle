@@ -1,3 +1,9 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.7'
+}
+
+apply from: '../gradle/jcenter.gradle'
+
 dependencies {
     compile libraries.snake_yaml,
             libraries.commons_lang3,

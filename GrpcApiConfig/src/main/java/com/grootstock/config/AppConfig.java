@@ -29,7 +29,7 @@ public class AppConfig {
     return ENV_CONFIG_INSTANCE.isProduction();
   }
 
-  public String getConfig(String key) {
+  public static String getConfig(String key) {
     return (String) CONFIGS.get(key);
   }
 

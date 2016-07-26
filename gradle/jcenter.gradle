@@ -1,0 +1,91 @@
+/* https://github.com/bintray/gradle-bintray-plugin */
+apply plugin: 'maven-publish'
+
+def description = 'gRPC Starter project (https://grpc.io).'
+def repoUrl = 'https://github.com/ankitdimania/grpc-starter'
+
+def getConfig(envVarName, propName) {
+    if (System.getenv(envVarName)) {
+        return System.getenv(envVarName)
+    } else if (project.hasProperty(propName)) {
+        return project.property(propName)
+    }
+}
+
+publishing {
+    publications {
+        GrootStockPublication(MavenPublication) {
+            from components.java
+
+            groupId project.group
+            artifactId project.name
+            version project.version
+
+            pom.withXml {
+                def root = asNode()
+
+                root.appendNode('name', project.name)
+                root.appendNode('description', description)
+                root.appendNode('url', repoUrl)
+
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', repoUrl)
+                scm.appendNode('connection', 'git@github.com:eligible/eligible-java.git')
+                scm.appendNode('developerConnection', 'git@github.com:eligible/eligible-java.git')
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'The MIT License (MIT)')
+                license.appendNode('url', 'https://opensource.org/licenses/MIT')
+
+                def developer = root.appendNode('developers').appendNode('developer')
+                developer.appendNode('id', 'GrootStock')
+                developer.appendNode('name', 'GrootStock Engineering')
+                developer.appendNode('email', 'engineering@grootstock.com')
+            }
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+bintray {
+    user = getConfig('BINTRAY_USER', 'bintrayUser')
+    key = getConfig('BINTRAY_API_KEY', 'bintrayApiKey')
+
+    publications = ['GrootStockPublication']
+
+    dryRun = false //[Default: false] run task as dry-run, without deploying
+    publish = true //[Default: false] Whether version should be auto published after an upload
+    override = false //[Default: false] Whether to override version artifacts already published
+
+    pkg {
+        repo = 'maven'
+        name = project.name
+        userOrg = user
+        desc = description
+        websiteUrl = repoUrl
+        issueTrackerUrl = 'https://github.com/ankitdimania/grpc-starter/issues'
+        vcsUrl = 'https://github.com/ankitdimania/grpc-starter.git'
+        licenses = ['MIT']
+
+        version {
+            name = project.version
+            desc = description
+            released = new Date()
+            vcsTag = project.version
+            attributes = ['grpc-starter': 'com.grootstock:grpc-starter']
+
+            //Optional configuration for Maven Central sync of the version
+//            mavenCentralSync {
+//                sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+//                user = getConfig('OSS_USER', 'ossUser')
+//                password = getConfig('OSS_PASS', 'ossPass')
+//                close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central.
+//                // You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+//            }
+        }
+    }
+}
+
+// RUN ./gradlew bintrayUpload

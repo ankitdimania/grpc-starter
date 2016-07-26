@@ -1,9 +1,20 @@
-include 'grpcapi-interface'
-include 'GrpcApiService'
-include 'GrpcApiClient'
-include 'GrpcApiCore'
-include 'GrpcApiCommons'
-include 'GrpcApiAdapter'
-include 'GrpcApiModels'
-include 'GrpcApiConfig'
+rootProject.name = "grpc-starter"
 
+include 'grpcapi-interface'
+include 'grpc-api-config'
+include 'grpc-api-commons'
+include 'grpc-api-models'
+include 'grpc-api-adapter'
+include 'grpc-api-core'
+include 'grpc-api-service'
+
+include 'grpc-api-client'
+
+project(':grpc-api-config').projectDir = "$rootDir/GrpcApiConfig" as File
+project(':grpc-api-commons').projectDir = "$rootDir/GrpcApiCommons" as File
+project(':grpc-api-models').projectDir = "$rootDir/GrpcApiModels" as File
+project(':grpc-api-adapter').projectDir = "$rootDir/GrpcApiAdapter" as File
+project(':grpc-api-core').projectDir = "$rootDir/GrpcApiCore" as File
+project(':grpc-api-service').projectDir = "$rootDir/GrpcApiService" as File
+
+project(':grpc-api-client').projectDir = "$rootDir/GrpcApiClient" as File

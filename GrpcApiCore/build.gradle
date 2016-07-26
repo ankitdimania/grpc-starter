@@ -3,8 +3,8 @@ apply plugin: 'idea'
 
 dependencies {
     compile project(':grpcapi-interface')
-    compile project(':GrpcApiCommons')
-    compile project(':GrpcApiAdapter')
+    compile project(':grpc-api-commons')
+    compile project(':grpc-api-adapter')
 
     // DI
     compile libraries.dagger

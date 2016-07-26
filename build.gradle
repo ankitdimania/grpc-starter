@@ -2,12 +2,20 @@ description = 'Grpc API'
 
 allprojects {
     group = 'com.grootstock'
-    version = '0.1' // CURRENT_GRPC_API_VERSION
+    version = '0.2' // CURRENT_GRPC_API_VERSION
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
 }
 
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'java'
+    apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'jacoco'
 
@@ -144,5 +152,67 @@ subprojects {
 
     artifacts {
         archives javadocJar, sourcesJar
+    }
+
+    uploadArchives.repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        String stagingUrl
+        if (rootProject.hasProperty('repositoryId')) {
+            stagingUrl = 'https://oss.sonatype.org/service/local/staging/deployByRepositoryId/' +
+                    rootProject.repositoryId
+        } else {
+            stagingUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+        }
+        def configureAuth = {
+            if (rootProject.hasProperty('ossrhUsername') && rootProject.hasProperty('ossrhPassword')) {
+                authentication(userName: rootProject.ossrhUsername, password: rootProject.ossrhPassword)
+            }
+        }
+        repository(url: stagingUrl, configureAuth)
+        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/', configureAuth)
+    }
+
+    [
+            install.repositories.mavenInstaller,
+            uploadArchives.repositories.mavenDeployer,
+    ]*.pom*.whenConfigured { pom ->
+        pom.project {
+            name "$project.group:$project.name"
+            description project.description
+            url 'https://github.com/ankitdimania/grpc-starter'
+
+            scm {
+                connection 'scm:git:https://github.com/ankitdimania/grpc-starter.git'
+                developerConnection 'scm:git:git@github.com:ankitdimania/grpc-starter.git'
+                url 'https://github.com/ankitdimania/grpc-starter'
+            }
+
+            licenses {
+                license {
+                    name 'The MIT License (MIT)'
+                    url 'https://opensource.org/licenses/MIT'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'GrootStock'
+                    name 'GrootStock Contributors'
+                    email 'engineering@grootstock.com'
+                    url 'http://grootstock.com/'
+                    // https://issues.gradle.org/browse/GRADLE-2719
+                    // organization = "GrootStock, Inc."
+                    // organizationUrl "https://www.grootstock.com"
+                }
+            }
+        }
+//        if (!(project.name in
+//                ["grpc-stub", "grpc-protobuf", "grpc-protobuf-lite", "grpc-protobuf-nano"])) {
+//            def core = pom.dependencies.find { dep -> dep.artifactId == 'grpc-core' }
+//            if (core != null) {
+//                 Depend on specific version of grpc-core because internal package is unstable
+//                core.version = "[" + core.version + "]"
+//            }
+//        }
     }
 }

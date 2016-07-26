@@ -1,9 +1,15 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.7'
+}
+
 apply plugin: 'net.ltgt.apt'
 apply plugin: 'idea'
 
+apply from: '../gradle/jcenter.gradle'
+
 dependencies {
     compile project(':grpcapi-interface')
-    compile project(':GrpcApiCommons')
+    compile project(':grpc-api-commons')
 
     // DI
     compile libraries.dagger

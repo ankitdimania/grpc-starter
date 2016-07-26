@@ -17,8 +17,8 @@ startScripts.enabled = false
 
 dependencies {
     compile project(':grpcapi-interface')
-    compile project(':GrpcApiCommons')
-    compile project(':GrpcApiCore')
+    compile project(':grpc-api-commons')
+    compile project(':grpc-api-core')
 
     // DI
     compile libraries.dagger
